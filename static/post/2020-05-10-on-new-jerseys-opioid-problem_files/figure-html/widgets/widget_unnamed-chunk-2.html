@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<style>body{background-color:white;}</style>
+<script src="datatables_libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="datatables_libs/jquery/jquery.min.js"></script>
+<link href="datatables_libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="datatables_libs/datatables-binding/datatables.js"></script>
+<script src="datatables_libs/pymjs/pym.v1.min.js"></script>
+<link href="datatables_libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="datatables_libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="datatables_libs/dt-core/js/jquery.dataTables.min.js"></script>
+<script src="datatables_libs/pdfmake/pdfmake.js"></script>
+<script src="datatables_libs/pdfmake/vfs_fonts.js"></script>
+<link href="datatables_libs/dt-ext-buttons/css/buttons.dataTables.min.css" rel="stylesheet" />
+<script src="datatables_libs/dt-ext-buttons/js/dataTables.buttons.min.js"></script>
+<script src="datatables_libs/dt-ext-buttons/js/buttons.flash.min.js"></script>
+<script src="datatables_libs/dt-ext-buttons/js/buttons.html5.min.js"></script>
+<script src="datatables_libs/dt-ext-buttons/js/buttons.colVis.min.js"></script>
+<script src="datatables_libs/dt-ext-buttons/js/buttons.print.min.js"></script>
+<link href="datatables_libs/nouislider/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="datatables_libs/nouislider/jquery.nouislider.min.js"></script>
+<link href="datatables_libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="datatables_libs/selectize/selectize.min.js"></script>
+<link href="datatables_libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="datatables_libs/crosstalk/js/crosstalk.min.js"></script>
+  <title>datatables</title>
+</head>
+<body>
+<div id="htmlwidget_container">
+  <div id="htmlwidget-ca82d59f84ca62c0acd4" style="width:100%;height:500px;" class="datatables html-widget"></div>
+  <script>HTMLWidgets.pymChild = new pym.Child();HTMLWidgets.addPostRenderHandler(function(){
+                                setTimeout(function(){HTMLWidgets.pymChild.sendHeight();},100);
+                            });</script>
+</div>
+<script type="application/json" data-for="htmlwidget-ca82d59f84ca62c0acd4">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;All of New Jersey&quot;,&quot;Atlantic&quot;,&quot;Bergen&quot;,&quot;Burlington&quot;,&quot;Camden&quot;,&quot;Cape May&quot;,&quot;Cumberland&quot;,&quot;Essex&quot;,&quot;Gloucester&quot;,&quot;Hudson&quot;,&quot;Hunterdon&quot;,&quot;Mercer&quot;,&quot;Middlesex&quot;,&quot;Monmouth&quot;,&quot;Morris&quot;,&quot;Ocean&quot;,&quot;Passaic&quot;,&quot;Salem&quot;,&quot;Somerset&quot;,&quot;Sussex&quot;,&quot;Union&quot;,&quot;Warren&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"15.32\" data-max=\"43.64\" data-scale=\"2\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","extensions":["Buttons"],"caption":"<caption style=\"caption-side: bottom; text-align: center;\">\n  <em>Hydrocodone and Oxycodone Pills Supplied to New Jersey<\/em>\n<\/caption>","data":[["All of New Jersey","Atlantic","Bergen","Burlington","Camden","Cape May","Cumberland","Essex","Gloucester","Hudson","Hunterdon","Mercer","Middlesex","Monmouth","Morris","Ocean","Passaic","Salem","Somerset","Sussex","Union","Warren"],["1,976,570,050","96,022,009","154,079,096","130,872,301","196,141,964","35,955,476","56,231,511","119,908,199","113,321,730","86,763,397","20,004,533","72,794,330","173,753,378","155,384,472","86,058,375","164,346,176","85,335,218","22,202,060","48,526,381","36,330,893","95,353,414","27,185,137"],[24.97,39.02,18.81,32.39,42.37,41.47,39.8,17.02,43.64,15.32,17.33,22,23.89,27.2,19.37,31.71,18.97,37.5,16.49,27.1,19.75,27.8]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>County<\/th>\n      <th>Total # of Pills<\/th>\n      <th>Yearly Average # of Pills per Capita<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"Bfrtip","buttons":["copy","csv","pdf"],"paging":false,"scrollY":"200px","columnDefs":[{"className":"dt-right","targets":2}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true}},"evals":[],"jsHooks":[]}</script>
+<script type="application/htmlwidget-sizing" data-for="htmlwidget-ca82d59f84ca62c0acd4">{"viewer":{"width":"100%","height":350,"padding":0,"fill":false},"browser":{"width":"100%","height":500,"padding":0,"fill":false}}</script>
+</body>
+</html>

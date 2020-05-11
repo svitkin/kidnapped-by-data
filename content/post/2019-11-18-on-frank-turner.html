@@ -1,0 +1,39 @@
+---
+title: On Frank Turner
+author: ''
+date: '2019-11-18'
+slug: on-frank-turner
+categories: []
+toc: false
+tags:
+  - Frank Turner
+  - music
+  - leaflet
+  - map
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/pymjs/pym.v1.js"></script>
+<script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
+
+
+<div id="the-map" class="section level2">
+<h2>The Map</h2>
+<p>Frank Turner is one of my favorite artists and performers. His albums have been a big part of my life and his live shows are memorable experiences I’d recommend to anyone. He is also one of the hardest working touring musicians out there, having played at well over 2,000 shows since 2004. The respect he has for his craft is inspiring.</p>
+<p>His fans are also inspiring! Going off of the idea and work the user Zoe_Bee on <a href="https://forum.frank-turner.com" target='_blank'>forum.frank-turner.com</a> had done<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, and using the data on his website and the mapping package leaflet, I decided to visualize all of his shows so far<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. So go explore! The map is completely interactive. Find the shows you were at or just marvel at the Road<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> this man has taken throughout his career.</p>
+<div id="htmlwidget-1" style="width:100%;height:480px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/2019-11-18-on-frank-turner_files/figure-html//widgets/widget_unnamed-chunk-1.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="the-method" class="section level2">
+<h2>The Method</h2>
+<p>If you just want to check out the code, it’s <a href='https://github.com/svitkin/frank-turner-map' target='_blank'>here.</a> To start, I scraped down the text containing show information from <a href='https://frank-turner.com/basic-archive/' target='_blank'>frank-turner.com/basic-archive/</a>. Then, using the Google Maps API, the venues were geocoded with the text from the website. 30 venues were unable to be geocoded. Of these, 11 were shows in International Waters that I chose to ignore<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. The other 19, I googled until I found a suitable candidate address to geocode with the API. The rest of the work was done by the excellent <a href='https://rstudio.github.io/leaflet/' target='_blank'>leaflet package</a>, its equally excellent <a href='https://github.com/Leaflet/Leaflet.markercluster' target='_blank'>marker cluster plugin</a>, and the (also excellent) <a href='https://cran.r-project.org/web/packages/widgetframe/' target='_blank'>widgetframes</a> package for performant presentation of the map.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Zoe_Bee also created a map! It’s great! They got the locations of all the venues through a collaborative process, working with other people on the forum. Go check it <a href='http://www.arcgis.com/home/webmap/viewer.html?webmap=9da0b46715104662b5f48148e394bc7b&extent=-126.3309,31.6552,-93.8772,47.4295' target='_blank'>out!</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>See the Methods section for caveats.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>There are more elegant refrences I could have used, but I couldn’t help myself.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>I guess you could figure out the route of the cruise line the show was on, the day and time the cruise ship left, and then try to approximate where the show was based on those factors, but…that felt unnecessary.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
