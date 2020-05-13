@@ -158,7 +158,7 @@ display_arcos_plot("opioid_pills_supplied_per_capita-county.rds")
 ```
 
 
-Indeed, every single county in New Jersey had a higher yearly pill supply in 2014 than in 2006. 
+Indeed, every single county in New Jersey has a positive correlation between opioid pills supplied per capita and year.
 
 
 <div style="margin-bottom:50px;"></div>
@@ -208,7 +208,7 @@ bind_rows(total_nj_summary,
   frameWidget(height = 400)
 ```
 
-The data for prescription opioid related hospital visits comes from a NJ.gov <a href="https://www.nj.gov/health/populationhealth/opioid/opioid_hospital.shtml" target="_blank">dashboard</a>, but its underlying data actually comes from the <a href="https://www.nj.gov/health/healthcarequality/health-care-professionals/njddcs/" target="_blank">NJ Hospital Discharge Data Collection System (NJDDCS)</a>. The NJDDCS collects its data from electronically submitted claims for health care provided in a hospital or electronic submitted exchanges of claims information between payers. Payers in this case being either the individual, business, or insurance company paying for a healthcare service. I scraped the data for the earliest year available, 2007, to one year after the last year in the ARCOS data, 2015. Every county in New Jersey (besides Hunterdon which had no change) had more prescription opioid related hospital visits in 2015 than in 2007. 
+The data for prescription opioid related hospital visits comes from a NJ.gov <a href="https://www.nj.gov/health/populationhealth/opioid/opioid_hospital.shtml" target="_blank">dashboard</a>, but its underlying data actually comes from the <a href="https://www.nj.gov/health/healthcarequality/health-care-professionals/njddcs/" target="_blank">NJ Hospital Discharge Data Collection System (NJDDCS)</a>. The NJDDCS collects its data from electronically submitted claims for health care provided in a hospital or electronic submitted exchanges of claims information between payers. Payers in this case being either the individual, business, or insurance company paying for a healthcare service. I scraped the data for the earliest year available, 2007, to one year after the last year in the ARCOS data, 2015. Every county in New Jersey has a positive correlation between year and number of hospitalizations.
 
 ```{r}
 display_arcos_plot("x_of_hospital_visits_per_10_000_residents-county.rds")
@@ -230,7 +230,7 @@ There is also the other side of the legal opioid supply, prescriptions. Data for
 display_arcos_plot("prescription_rate-county.rds")
 ```
 
-Interestingly, although the supply to pharmacies of hydrocodone and oxycodone pills is increasing, the prescription rates do not always show the same obvious positive trends.
+Interestingly, although the supply to pharmacies of hydrocodone and oxycodone pills is increasing, the prescription rates do not always show the same obvious positive trend.
 
 <div style="margin-bottom:20px;"></div>
 
