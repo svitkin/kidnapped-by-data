@@ -253,7 +253,7 @@ Ideally, one would also want to control for how many residents have a legitimate
 
 ## Random-Intercept Model
 
-For reasons discussed in the Appendix, I chose to model prescription opioid hospitalizations with a random-intercept model.
+For reasons discussed in the [Appendix](#choosing-a-model), I chose to model prescription opioid hospitalizations with a random-intercept model.
 
 The final set of data sources for this model are:
 
@@ -285,7 +285,7 @@ read_arcos_data("poisson-pctchange-table.rds")
 
 <div style="margin-bottom:20px;"></div>
 
-The main takeaway from the estimates is that there is indeed an association between the supply of opioid pills to a county and its prescription opioid hospitalization rate. More specifically, <strong>controlling for the demographic and economic descriptors, and controlling for the percent of the population that is receiving blind and/or disability SSI benefits, a county in New Jersey with a 5 pills per capita higher average number of prescription opioids supplied can be expected to have `r mdl_df %>% filter(term == "mean_lag_opioids") %>% pull(pctg) %>% round(2)`% more prescription opioid related hospitalizations per 10,000 residents</strong>. 
+The main takeaway from the estimates is that there is indeed an association between the supply of opioid pills to a county and its prescription opioid hospitalization rate. More specifically, <strong>after controlling for the demographic and economic descriptors of a county, its prescription rate, and the percent of its residents receiving blind and/or disability SSI benefits, a county in New Jersey with a 5 pills per capita higher average number of prescription opioids supplied can be expected to have `r mdl_df %>% filter(term == "mean_lag_opioids") %>% pull(pctg) %>% round(2)`% more prescription opioid related hospitalizations per 10,000 residents</strong>. 
 
 ```{r model-effect-plot}
 display_arcos_plot("model-plot.rds", static = TRUE)
@@ -303,7 +303,7 @@ display_arcos_plot("unemp-hosp-example.rds", static = TRUE)
 
 So although it is unintuitive initially, the negative effect is actually not completely out of left-field, and since the goal of this analysis is to parse out the effect of the opioid pill supply for a county and not specific aspects of its economy, I will leave this the details of this relationship to future work. 
 
-For further examination of the legitamacy of this model and its results, check out the Model Diagnostics in the Appendix. 
+For further examination of the legitamacy of this model and its results, check out the [Model Diagnostics section](#model-diagnostics) of the Appendix.
 
 ## Final Thoughts
 
@@ -311,11 +311,13 @@ Did I create a model that controls for all the institutional effects happening w
 
 Ideally, this analysis could be extended to all counties in the United States. Perhaps a future project!
 
+<div style="margin-bottom:120px;"></div>
+
 ## Appendix
 
 ### Choosing a model
 
-For this section, I will assume some familiarity with linear regression and its  associated  terminology.
+For this section, I will assume some familiarity with linear regression and its  associated terminology.
 
 Every observation in our data is a year in a county, repeated measures that create a nested hiearchy. Observational hierarchies in data violate a standard assumption of linear regression - after controlling for all included variables in a study, the residuals from each observation are independent. The yearly number of hospital visits within each county will be correlated, and therefore the residuals from a linear regression are also likely to be correlated. We are forced to use some other method besides linear regression or its extensions like the general linear model. 
 
@@ -369,9 +371,10 @@ For a significantly more in-depth but still accessible account of these two mode
 
 
 ### Model Diagnostics
-To ensure the legitamacy of the results from this model, we need to check some of its assumptions. In ordinary linear regression, this is often done by looking at the residuals. However, with a count outcome, often the data is grouped around a few numbers. With the hierarchical structure of our data, this strong grouping only intensifies. This makes it difficult to check classic pearson or deviance residuals and make informative conclusions. However, the R package <a href="https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html" target="_blank">DHARMa</a> provides a method to check randomized quantile residuals. Randomized quantile residuals are a simulation based approach to checking model validity. Creating these residuals is done by first estimating an empirical cumulative density function (CDF) from the predicted values of the model. Then the actual observational outcome data is checked against the CDF, and the quantile it falls in is recorded. For example, a recorded quantile of 0.75 means that 75% of the predicted data falls below that observation. The "randomized" part of this process is the transformation of an integer outcome into a smooth CDF, which requires adding a random value to the predictions. This is usually chosen from a random uniform distribution. Intuitively, one would think that if the model is guessing wrong in a non-systematic way then the spread of the observations along the quantiles will be pretty even. Indeed, <a href="https://math.usask.ca/~longhai/researchteam/theses/alithesis.pdf" target="_blank">Sadeghpour (2016)</a> showed that if the model accurately reflects the data generating process of the observations, then the randomized quantile residuals will follow a normal distribution. 
+To ensure the legitamacy of the results from this model, we need to check some of its assumptions. Modeling hospitalization counts with a poisson distribution adds an assumption of equidispersion, that the mean and variance of the residuals from our model are the same. More often than not, models suffer from overdispersion. The overdispersion test from the <a href="https://easystats.github.io/performance/reference/check_overdispersion.html" target="_blank">performance</a> package was used to check if the residuals of the model exhibit overdispersion, and the test failed to reject the null hypothesis of equidispersion.
 
-Modeling hospitalization counts with a poisson distribution adds an assumption of equidispersion, that the mean and variance of the residuals from our model are the same. More often than not, models suffer from overdispersion. 
+In ordinary linear regression, many checks of assumptions are done by looking at the residuals. However, with a count outcome, the data is often grouped around a few numbers. With the hierarchical structure of our data, this strong grouping only intensifies. This makes it difficult to check classic pearson or deviance residuals and make informative conclusions. However, the R package <a href="https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html" target="_blank">DHARMa</a> provides a method to check randomized quantile residuals. Randomized quantile residuals are a simulation based approach to checking model validity. Creating these residuals is done by first estimating an empirical cumulative density function (CDF) from the predicted values of the model. Then the actual observational outcome data is checked against the CDF, and the quantile it falls in is recorded. For example, a recorded quantile of 0.75 means that 75% of the predicted data falls below that observation. The "randomized" part of this process is the transformation of an integer outcome into a smooth CDF, which requires adding a random value to the predictions. This is usually chosen from a random uniform distribution. Intuitively, one would think that if the model is guessing wrong in a non-systematic way then the spread of the observations along the quantiles will be pretty even. Indeed, <a href="https://math.usask.ca/~longhai/researchteam/theses/alithesis.pdf" target="_blank">Sadeghpour (2016)</a> showed that if the model accurately reflects the data generating process of the observations, then the randomized quantile residuals will follow a normal distribution. 
+
 
 <div style="margin-bottom:20px;"></div>
 
@@ -380,7 +383,6 @@ resids <- read_arcos_data("simulated-residuals.rds")
 plot(resids)
 ```
 
-The overdispersion test from the <a href="https://easystats.github.io/performance/reference/check_overdispersion.html" target="_blank">performance</a> package was used to check if the residuals of the model exhibit overdispersion, and the test failed to reject the null hypothesis of equidispersion.
 
 The quantile residuals seem to be normally distributed according to the QQ plot and there is no obvious pattern in the plot of the predicted values and the quantile residuals. The variance of the residuals also stays constant along the range of the model predictions. The black line with the shaded confidence intervals on the Residuals vs. Predicted plot are the results of a quantile regression in DHARMa, showing a comparison of the empirically derived quantiles residuals and the ideal quantile intervals (the default of 0.25, 0.50, and 0.75). The quantile regression is run by regressing the model predictions onto one of the quantiles of the empirically derived residuals. Ideally, one would want to see no relationship between the model predictions and any residual quantile. This is also true of the independent variables. A relationship between an independent variable and a quantile of the residuals could indicate there is an important variable missing from the model or some other misspecification that could mean  bias in the estimates. 
 
