@@ -10,7 +10,7 @@ tags:
   - plotly
   - ARCOS
   - opioids
-summary: I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I've read news reports on the prescription opioid epidemic, but I've never done a deep dive into the data behind the epidemic to learn more. Well, here's that.
+summary: I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I've read news reports on the prescription opioid epidemic, but I've never done a deep dive into the data behind the epidemic to learn more.
 ---
 
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
@@ -18,19 +18,76 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 <script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
 
 
-<p>I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I’ve read news reports on the prescription opioid epidemic, but I’ve never done a deep dive into the data behind the epidemic to learn more. Well, here’s that.</p>
+<p>I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I’ve read news reports on the prescription opioid epidemic, but I’ve never done a deep dive into the data behind the epidemic to learn more.</p>
 <p>After some research, I found the <a href="https://wpinvestigative.github.io/arcos/" target="_blank">Automation of Reports and Consolidated Orders System (ARCOS) database</a>. The data from ARCOS is owned by the Drug Enforcement Agency (DEA), but was released by the Washington Post on July 16th, 2019, after a long legal battle in conjunction with the Charleston Gazette-Mail of West Virginia. ARCOS tracks the supply side of opioid pills in the United States, with data on every prescription opioid pill sold from a manufacturer to a pharmacy from 2006 to 2014.</p>
 <p>Focusing on my home state, I wanted to understand how much the supply of opioid pills is associated with negative public health outcomes. I discovered that there is indeed an association - <strong>in particular, an increase in the number of pills supplied per capita to a county in New Jersey is associated with more prescription opioid related hospitalizations.</strong> The rest of this post is focused on how I came to that conclusion and the nuance surrounding it.</p>
 <p>The opioid epidemic is far reaching, and the ARCOS database is an invaluable resource for understanding it. For national coverage and analysis of ARCOS, check out the <a href="https://www.washingtonpost.com/national/2019/07/20/opioid-files/?arc404=true" target="_blank">Washington Post’s collection of articles</a>. For local reports on ARCOS, check out the Washington Post’s <a href="https://www.washingtonpost.com/national/2019/08/12/post-released-deas-data-pain-pills-heres-what-local-journalists-are-using-it/" target="_blank">other collection of articles</a>. For an existing analysis of this data for New Jersey, I highly recommend <a href="https://www.nj.com/data/2019/07/tracking-the-15-billion-painkillers-that-flooded-nj-and-sparked-an-epidemic-thats-killed-nearly-20k.html" target="_blank">NJ.com’s article</a>, which is filled with some excellent data visualizations and reporting that offers a great summary of how badly impacted New Jersey has been by the flood of prescription pills into its communities.</p>
 <p>All code and data for the analyses from this post can be found at the associated <a href="https://github.com/svitkin/arcos-project" target="_blank">github repository</a>.</p>
-<div id="finding-the-right-question" class="section level2">
-<h2>Finding the right question</h2>
-<p>I began looking at ARCOS with a broad goal of finding more about the impact of the supply of opioid pills on New Jersey. Over time, my focus began to narrow to understanding the impact on a county level. The ARCOS API wrapper in R has a handy <code>arcos::summarized_county_annual()</code> function that pulls in the number of hydrocodone and oxycodone pills supplied to a county per year. Going forward, when I refer to opioid pills in the context of the ARCOS dataset, I only mean oxycodone and hydrocodone pills.</p>
-<p>After deciding on a county-level analysis, I still needed to find a measurable way to define “impact”. NJ.gov has a <a href="https://www.nj.gov/health/populationhealth/opioid/opioid_hospital.shtml" target="_blank">data dashboard on drug-related hospital visits</a> that has enough overlap with the years of the ARCOS data to be useful to this analysis. With that final piece, a testable hypothesis could be formed: The increasing number of opioid pills supplied to New Jersey counties is associated with an increasing number of prescription opioid related hospital visits. Not the most earth-shattering of hypotheses, but an important one to test and get verifiable quantities on.</p>
+<div id="about-the-data" class="section level2">
+<h2>About the Data</h2>
+<div id="hospitlizations" class="section level3">
+<h3>Hospitlizations</h3>
+<p>I model the impact of the opioid pill supply on New Jersey by trying to find its effect on a negative public health outcome, prescription opioid related hospital visits. My testable hypothesis is: <strong>An increase in the number of opioid pills supplied per capita to New Jersey counties is associated with an increased number of prescription opioid related hospital visits.</strong></p>
+<p>NJ.gov has a <a href="https://www.nj.gov/health/populationhealth/opioid/opioid_hospital.shtml" target="_blank">data dashboard on drug-related hospital visits</a> from 2008 to 2018<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, which has enough overlap with the years of ARCOS data to be usable. It is also one of the few public health outcomes I could find with full data, as many counts (like opioid related mortality) are suppressed for privacy reasons.</p>
+<div style="margin-bottom:50px;">
+
 </div>
-<div id="bringing-data-together" class="section level2">
-<h2>Bringing data together</h2>
-<p><em>Summary of Data Sources</em>:</p>
+<div id="htmlwidget-1" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-2.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p>Every county in New Jersey has a positive correlation between year and number of hospitalizations, indicating a general increase in prescription opioid related hospitalizations over time.</p>
+<div id="htmlwidget-2" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-3.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="arcos" class="section level3">
+<h3>ARCOS</h3>
+<p>The ARCOS API wrapper in R has a handy <code>arcos::summarized_county_annual()</code> function that pulls in the number of hydrocodone and oxycodone pills supplied to a county per year. Going forward, when I refer to opioid pills in the context of the ARCOS dataset, I only mean oxycodone and hydrocodone pills.</p>
+<p>The years of hospitalization data span from 2008 to 2015, while the ARCOS data goes from 2006 to 2014. This presented an issue when combining data for the model. If I simply took the number of county-year observations from the overlap of these two datasets, there would only be 147 observations for the 21 counties in New Jersey, a lot less data than the full 9 years of ARCOS data. So partially motivated by trying to maximize the number of observations, and partially because there could legitimately be a lag in the effect of opiate pill supply (dependence on a substance that could lead to an eventual hospitalization takes some nonzero amount of time to develop), I lagged the ARCOS data by one year to match up with the hospitalization data. Despite that change, I still lose the 2006 year of ARCOS data, bringing us to 168 observations, 21 counties and 8 years of data, from 2008 to 2015.</p>
+<div style="margin-bottom:30px;">
+
+</div>
+<div id="htmlwidget-3" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-4.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p>From 2006 to 2014, New Jersey was supplied with 1,976,570,050 hydrocodone and oxycodone pills. On average, 24.97 hydrocodone and oxycodone pills were supplied per capita per year (per capita rates are obtained with county population estimates from the American Community Survey, discussed in greater detail below). There is quite a bit of range in the supply profile of counties, from Hudson County with 15.32 pills per capita supplied on average to Gloucester County with 43.64 pills per capita supplied on average. However, common across all counties, is an upward trend in the number of pills per capita supplied over time.</p>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="htmlwidget-4" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-5.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p>Indeed, every single county in New Jersey has a positive correlation between opioid pills supplied per capita and year. A visual inspection of the relationship between pills supplied and hospital visits shows a generally positive association between the two quantities.</p>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="htmlwidget-5" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-6.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="prescriptions" class="section level3">
+<h3>Prescriptions</h3>
+<p>I wanted my model of hopsitalizations to include the other side of the legal opioid supply, prescriptions. Data for opioid prescription rates by county (the number of prescriptions per 100 people) can be found on the <a href="https://www.cdc.gov/drugoverdose/maps/rxrate-maps.html" target="_blank">Center for Disease Control’s (CDC) prescription rate maps</a>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> For the eventual model of hospitalizations, prescription rate data is also lagged by one year to match up with the ARCOS data.</p>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="htmlwidget-6" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-7.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p>Interestingly, although the supply to pharmacies of hydrocodone and oxycodone pills is increasing, the prescription rates do not always show the same obvious positive trend.</p>
+<div style="margin-bottom:20px;">
+
+</div>
+<div id="htmlwidget-7" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-8.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
+<p>Prescription rates, however, do seem to have a positive relationship with the number of prescription opioid-related hospital visits. The one group of visual outliers from this positive trend is Cape May. Out of all the counties, Cape May has the highest percentage of its population aged 60 years or older over the years of the data. It has an unusually high proportion of an age demographic that is more likely to get a prescriprion, but is less likely to be hospitalized for prescription opioid abuse (although the elderly can certainly abuse prescription opioids in a way that leads to hospitalization). An interesting point for future research.</p>
+</div>
+<div id="controlling-variables" class="section level3">
+<h3>Controlling Variables</h3>
+<p>To model the effect of the number of opioid pills supplied accurately, I need to control for the other mechanisms that might impact the number of prescription opioid related hospitalizations. To best approximate these other factors, I pulled down demographic and economic characteristics of each county, so at least I can control for the changes in a county’s “environment” (i.e. the make-up of its residents and its economic health).</p>
+<p>For all demographic (and some economic) characteristics, I used the U.S. Census’s American Community Survey (ACS) 1 year estimates, pulled down with the <a href="https://walkerke.github.io/tidycensus/" target="_blank">tidycensus</a> package. The ACS is continually sampled throughout its defined duration, with the 1 year ACS estimates having the smallest sample size of the available ACS datasets (the others being the 3 and 5 year). However, since we are interested in individual years and changes between those years, the 1 year estimates are more suited to our data (except for race categories in Cape May county in 2011, which had missing data for its 1 year estimate and was filled in with the 5 year estimate instead).<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> I gathered distribution data on race, age, and median household income for each county from 2008 to 2015. Under the <a href="https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch10.pdf" target="_blank">recommendation of the U.S. Census</a>, I used the annual averages from the <a href="https://www.bls.gov/cpi/research-series/home.htm" target="_blank">Consumer Price Index research series</a> to translate the median incomes to 2015 U.S. dollars.</p>
+<p>Unemployment rates for each county, as another proxy for economic conditions, were pulled from the <a href="https://www.bls.gov/lau/" target="_blank">Bureau of Labor Statistics (BLS) Local Area Unemployment tables</a>.</p>
+<p>Ideally, one would also want to control for how many residents have a legitimate medical need for opioid pills. This is a <a href="https://www.cdc.gov/drugoverdose/prescribing/guideline.html" target="_blank">complex question</a> with an inherent amount of uncertainty around how much pain is appropriate for someone to be prescribed opiates. Although it is not ideal, I use the Social Security Administration’s data on the number of recipients of social security benefits for blindness and/or disability. This is not an ideal measurement, as this pools together numbers for many different disabilities and misses members of the population who are not receiving benefits but might have a medical need for an opioid prescription. However, it is currently the best approximation I could find for this concept.</p>
+</div>
+</div>
+<div id="random-intercept-model" class="section level2">
+<h2>Random-Intercept Model</h2>
+<p>For reasons discussed in the Appendix, I chose to model prescription opioid hospitalizations with a random-intercept model.</p>
+<p>The final set of data sources for this model are:</p>
 <ul>
 <li>ARCOS API</li>
 <li>NJ.gov Hospitalization Data Dashboard</li>
@@ -39,60 +96,599 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 <li>Center for Disease Control’s (CDC) prescription rate maps</li>
 <li>Social Security Administration’s data on Blind and/or Disability Benefits</li>
 </ul>
-<p>The ARCOS data can be accessed through an <a href="https://github.com/wpinvestigative/arcos-api" target="_blank">API</a>, built in R. As previously mentioned, I used <code>arcos::summarized_county_annual()</code>, which returns the total number of hydrocodone and oxycodone pills shipped to pharmacies and practitioners in a county for each year of data available (2006-2014). Let’s look at a summary of the ARCOS data in New Jersey.</p>
-<div style="margin-bottom:30px;">
-
+<p>Each observation in the final dataset is a year within a county. I want the model to not only measure the yearly effect of a variable (i.e. the effect of prescription rate on hospiatlizations for a county in a given year), but also to estimate “between effects”, differences between the average number of prescription opioid related hospitilizations for a county. To do this, I use the “within-between” formulation of the random-intercept model found in <a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/0334A27557D15848549120FE8ECD8D63/S2049847014000077a.pdf/explaining_fixed_effects_random_effects_modeling_of_timeseries_crosssectional_and_panel_data.pdf" target="_blank">Bell and Jones, 2015</a>, itself a modification of the formula found in <a href="https://www.jstor.org/stable/1913646?seq=1" target="_blank">Mundlak, 1978</a>. I county-mean center all the variables, so that for example, each year of opioid supply data in Morris County has the mean number of opioid pills supplied per capita for Morris County subtracted from it. I also include the mean of almost every variable discussed to capture “between effects”. For example, the mean number of opioid pills supplied per capita for each county is included as a variable.</p>
+<p>County-mean demographic variables are not included for a few reasons. The number of observations in the data is small, so I wanted to be careful with adding too many variables into the model. After including these variables in the model, the Akaike information criterion (AIC), a common measure of relative model fit, went up slightly (indicating a worse model fit) and the residual diagnostics (discussed in the Appendix) indicated a worse fit as well. Since these variables were primarily included as controls, I felt comfortable leaving them out for now.</p>
+<p>I use a Poisson distribution (a commonly used distribution to model count data) with a log link and the <code>lme4::glmer</code> function from the <a href="https://cran.r-project.org/web/packages/lme4/index.html" target="_blank">lme4 package</a> to estimate the model. In addition to the variables discussed before, indicator variables for each year of data are included to account for any potential differences in the data gathering process from year to year.</p>
 </div>
-<div id="htmlwidget-1" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-2.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-<p>From 2006 to 2014, New Jersey was supplied with 1,976,570,050 hydrocodone and oxycodone pills. On average, 24.97 hydrocodone and oxycodone pills were supplied per capita through those 8 years (per capita rates are obtained with county population estimates from the American Community Survey, discussed in greater detail below). There is quite a bit of range in the supply profile of counties, from Hudson County with 15.32 pills per capita supplied on average to Gloucester County with 43.64 pills per capita supplied on average. However, common across all counties, is an upward trend in the number of pills per capita supplied over time.</p>
+<div id="model-results" class="section level2">
+<h2>Model Results</h2>
+<p>Below are the resulting estimates for the coefficients of the model. I translated the coefficients to be percent changes in the number of prescription opioid related hospitalizations per 10,000 residents of a county. The variables have also been translated to units that I thought would be more interpretable and add context. A statistically significant term can be interpreted as changing the number of prescription opioid related hospitalizations per 10,000 by x%, controlling for the other variables. For “within effects”, this change is for a county in a year, while for “between effects”, this change is in the average number of hospitalizations for a county. Bold variables are statistically significat at the 0.05 level.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> In parentheses, are the percent change estimates 2 standard errors below and above the point estimate.</p>
 <div style="margin-bottom:20px;">
 
 </div>
-<div id="htmlwidget-2" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-3.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-<p>Indeed, every single county in New Jersey had a higher yearly pill supply in 2014 than in 2006.</p>
-<div style="margin-bottom:50px;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
 
-</div>
-<div id="htmlwidget-3" style="width:100%;height:400px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-4.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-<p>The data for prescription opioid related hospital visits comes from a NJ.gov <a href="https://www.nj.gov/health/populationhealth/opioid/opioid_hospital.shtml" target="_blank">dashboard</a>, but its underlying data actually comes from the <a href="https://www.nj.gov/health/healthcarequality/health-care-professionals/njddcs/" target="_blank">NJ Hospital Discharge Data Collection System (NJDDCS)</a>. The NJDDCS collects its data from electronically submitted claims for health care provided in a hospital or electronic submitted exchanges of claims information between payers. Payers in this case being either the individual, business, or insurance company paying for a healthcare service. I scraped the data for the earliest year available, 2007, to one year after the last year in the ARCOS data, 2015. Every county in New Jersey (besides Hunterdon which had no change) had more prescription opioid related hospital visits in 2015 than in 2007.</p>
-<div id="htmlwidget-4" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-5.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-<p>A visual inspection of the relationship between pills supplied and hospital visits shows a generally positive association between the two quantities.</p>
+#pvuhqmcbku .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pvuhqmcbku .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pvuhqmcbku .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pvuhqmcbku .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pvuhqmcbku .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pvuhqmcbku .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pvuhqmcbku .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pvuhqmcbku .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pvuhqmcbku .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pvuhqmcbku .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pvuhqmcbku .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pvuhqmcbku .gt_group_heading {
+  padding: 10px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 20px;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: black;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pvuhqmcbku .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 20px;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: black;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pvuhqmcbku .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pvuhqmcbku .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pvuhqmcbku .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pvuhqmcbku .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pvuhqmcbku .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#pvuhqmcbku .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pvuhqmcbku .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#pvuhqmcbku .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pvuhqmcbku .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pvuhqmcbku .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pvuhqmcbku .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pvuhqmcbku .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#pvuhqmcbku .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pvuhqmcbku .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#pvuhqmcbku .gt_left {
+  text-align: left;
+}
+
+#pvuhqmcbku .gt_center {
+  text-align: center;
+}
+
+#pvuhqmcbku .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pvuhqmcbku .gt_font_normal {
+  font-weight: normal;
+}
+
+#pvuhqmcbku .gt_font_bold {
+  font-weight: bold;
+}
+
+#pvuhqmcbku .gt_font_italic {
+  font-style: italic;
+}
+
+#pvuhqmcbku .gt_super {
+  font-size: 65%;
+}
+
+#pvuhqmcbku .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="pvuhqmcbku" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  <thead class="gt_header">
+    <tr>
+      <th colspan="3" class="gt_heading gt_title gt_font_normal" style>Poisson Random Intercept Model Results</th>
+    </tr>
+    <tr>
+      <th colspan="3" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style></th>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Independent Variable<sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Percent Change in Prescription Opioid Related Hopsitalizations (per 10,000)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">p-value</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">Between</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Average Opioids per Capita from 2007-2014 (in 5 pill increments)</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>23.71 (6.33, 43.92)</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>0.005</strong></p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Average Unemployment Rate</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>-14.71 (-23.21, -5.28)</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>0.002</strong></p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Average Median Household Income (In 2015 USD $10,000s)</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>-14.66 (-24.48, -3.56)</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>0.01</strong></p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Year 2015</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>30.69 (10.99, 53.88)</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>0.001</strong></p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Average Prescription Rate from 2007-2014</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>-0.42 (-2.07, 1.25)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.612</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Average Percent Receiving SSI Blind &amp; Disability Benefits (in tenths of a percentage point)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.25 (-1.44, 1.96)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.772</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2009</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>-2.32 (-25.37, 27.85)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.862</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2010</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>-1.68 (-27.22, 32.82)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.91</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2011</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>11.3 (-16.36, 48.1)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.454</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2012</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>6.18 (-19.65, 40.31)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.667</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2013</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>2.73 (-17.13, 27.35)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.802</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2014</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>9.07 (-6.68, 27.47)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.265</p>
+</div></td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">Within</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Prescription Rate in Previous Year</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>1.01 (-0.05, 2.08)</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>0.057</strong></p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Percent Receiving SSI Blind &amp; Disability Benefits (in tenths of a percentage point)</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>4.12 (1, 7.33)</strong></p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>0.008</strong></p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Opioids per Capita in Previous Year (in 5 pill increments)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>5.11 (-1.94, 12.66)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.151</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Unemployment Rate</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>1.4 (-5.4, 8.7)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.688</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Median Household Income (In 2015 USD $10,000s)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>1.47 (-8.33, 12.31)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.774</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent of White Alone</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>-0.35 (-1.61, 0.93)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.587</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent of Black or African-American Alone</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.73 (-3.4, 5.04)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.728</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent of 18 or younger</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>2.63 (-3.55, 9.21)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.403</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent between 18 and 34 years old</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.3 (-5.53, 6.5)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.919</p>
+</div></td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent between 35 to 59 years old</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>-3.05 (-7.86, 2.02)</p>
+</div></td>
+      <td class="gt_row gt_left"><div class='gt_from_md'><p>0.224</p>
+</div></td>
+    </tr>
+  </tbody>
+  
+  <tfoot>
+    <tr class="gt_footnotes">
+      <td colspan="3">
+        <p class="gt_footnote">
+          <sup class="gt_footnote_marks">
+            <em>1</em>
+          </sup>
+           
+          The random intercept has raw estimate of 2 and a standard deviation of 0.16, with a p-value of 0.02
+          <br />
+        </p>
+      </td>
+    </tr>
+  </tfoot>
+</table></div>
 <div style="margin-bottom:20px;">
 
 </div>
-<div id="htmlwidget-5" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-6.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-<p>There is also the other side of the legal opioid supply, prescriptions. Data for opioid prescription rates by county (the number of prescriptions per 100 people) can be found on the <a href="https://www.cdc.gov/drugoverdose/maps/rxrate-maps.html" target="_blank">Center for Disease Control’s (CDC) prescription rate maps</a>. The actual data supporting these maps and tables comes from the IQVIA Xponent 2006–2018 data, a sample of approximately 49,900 retail (non-hospital) pharmacies, which dispense nearly 92% of all retail prescriptions in the United States. From the CDC Website, a prescription in this data is defined as “an initial or refill prescription dispensed at a retail pharmacy in the sample and paid for by commercial insurance, Medicaid, Medicare, cash or its equivalent. This database does not include mail order prescriptions.” Unfortunately, there is no guarantee that the person obtaining a prescription lives in that county, which adds uncertainty to the rate numbers provided by this data.</p>
+<p>The main takeaway from the estimates is that there is indeed an association between the supply of opioid pills to a county and its prescription opioid hospitalization rate. More specifically, <strong>controlling for the demographic and economic descriptors, and controlling for the percent of the population that is receiving blind and/or disability SSI benefits, a county in New Jersey with a 5 pills per capita higher average number of prescription opioids supplied can be expected to have 23.71% more prescription opioid related hospitalizations per 10,000 residents</strong>.</p>
+<p><img src="/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>The model also found that an increase in the average median household income for a county is associated with lower average prescription opioid related hospitalizations for that county, controlling for other variables. An increase of 0.1% of a county’s residents receiving SSI Blind and/or Disability benefits is associated with more opioid pill related hospitalizations in that year, controlling for other variables. Additionally, the year 2015 is statistically significant and associated with a higher prescription opioid hospitalization rate. This most likely reflects the change in coding of hospitalization visits in the fourth quarter of 2015, an update of the International Classification of Diseases, Clinical Modification (ICD-CM) to the 10th revision. Prescription rate in the previous year is on the border of statistical significance and it is possible with more data (and therefore more statistical power), its estimate would be significant (of course, the opposite could also be true).</p>
+<p>These results are in line with my intuition for the expected relationships between these variables and hospitlizations. However, an unintuitive result shows up with unemployment rate. A higher average unemployment rate for a county is associated with a lower number of prescription opioid related hospitalizations. Although, this relationship might be an indicator of a modeling or data deficiency, it does makes some sense when looking more closely at the interpretation. When interpretting the percent change effect of a variable, the other variables are held constant. After looking at the unemployment rate and hospitalization relationship grouped by binned number of opioids supplied per capita (with the number of pills now seen as being “held constant” within a bin), negative relationships can arise. The 40 group especially has a strong negative relationship.</p>
 <div style="margin-bottom:20px;">
 
 </div>
-<div id="htmlwidget-6" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-7.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-<p>Interestingly, although the supply to pharmacies of hydrocodone and oxycodone pills is increasing, the prescription rates do not always show the same obvious positive trends.</p>
-<div style="margin-bottom:20px;">
-
+<p><img src="/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>So although it is unintuitive initially, the negative effect is actually not completely out of left-field, and since the goal of this analysis is to parse out the effect of the opioid pill supply for a county and not specific aspects of its economy, I will leave this the details of this relationship to future work.</p>
+<p>For further examination of the legitamacy of this model and its results, check out the Model Diagnostics in the Appendix.</p>
 </div>
-<div id="htmlwidget-7" style="width:100%;height:450px;" class="widgetframe html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7">{"x":{"url":"/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html//widgets/widget_unnamed-chunk-8.html","options":{"xdomain":"*","allowfullscreen":false,"lazyload":false}},"evals":[],"jsHooks":[]}</script>
-<p>Prescription rates, however, do seem to have a positive relationship with the number of prescription opioid-related hospital visits. The one group of visual outliers from this positive trend is Cape May. Out of all the counties, Cape May has the highest percentage of its population aged 60 years or older over the years of the data. It has an unusually high proportion of an age demographic that is more likely to get a prescritpion, but is less likely to be hospitalized for prescription opioid abuse. Although this is just a hunch, and older people can certainly abuse prescription opioids in a way that leads to hospitalization.</p>
-<p>To try and isolate the impact of the number of opioid pills supplied, I also need to control for the other mechanisms that might impact the number of prescription opioid related hospital visits in a county. To best approximate these other factors, I pulled down demographic and economic characteristics of each county.</p>
-<p>For all demographic (and some economic) characteristics, I used the U.S. Census’s American Community Survey (ACS) 1 year estimates. The ACS is continually sampled throughout its defined duration, with the 1 year ACS estimates having the smallest sample size of the available ACS datasets (the others being the 3 and 5 year). However, since we are interested in individual years and changes between those years, the 1 year estimates are more suited to our data (except for race categories in Cape May county in 2011, which had missing data for its 1 year estimate and was filled in with the 5 year estimate instead). A more thorough discussion of choosing ACS estimates can be found in Appendix 1 of <a href="https://www.psc.isr.umich.edu/dis/acs/handouts/Compass_Appendix.pdf" target="_blank">University of Michigan’s ACS guidelines</a>.</p>
-<p>Using the <a href="https://walkerke.github.io/tidycensus/" target="_blank">tidycensus</a> package, I obtained distribution data on race, age, sex, and median household income for each county from 2006 to 2015. Under the <a href="https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch10.pdf" target="_blank">recommendation of the U.S. Census</a>, I used the annual averages from the <a href="https://www.bls.gov/cpi/research-series/home.htm" target="_blank">Consumer Price Index research series</a> to translate the median incomes to 2015 U.S. dollars.</p>
-<p>Unemployment rates for each county, as another proxy for economic conditions, were pulled from the <a href="https://www.bls.gov/lau/" target="_blank">Bureau of Labor Statistics (BLS) Local Area Unemployment tables</a>.</p>
-<p>Ideally, one would also want to know how many people have a legitamate medical need for opioid pills. This is a <a href="https://www.cdc.gov/drugoverdose/prescribing/guideline.html" target="_blank">complex question</a> with an inherent amount of uncertainty around how much pain is appropriate for someone to be prescribed opiates. Although it is not ideal, I use the Social Security Administration’s data on the number of recipients of social security benefits for blindness and/or disability. This is not an ideal measurement, as this pools together numbers for many different disabilities and misses members of the population who are not receiving benefits but might have a medical need for an opioid prescription. However, it is currently the best approximation I could find for this concept.</p>
+<div id="final-thoughts" class="section level2">
+<h2>Final Thoughts</h2>
+<p>Did I create a model that controls for all the institutional effects happening within a county that could impact its number of prescription opioid hospitalizations? Definitely not! Are there issues with the data I use in this analysis. Sure! ACS 1 year estimates can be imprecise, one can imagine all sorts of difficulties with accurately classifying a hospitalization as related to prescription opioid abuse, and for a complex model there are only 168 observations. <strong>However, given the available data, I think there is still enough evidence to say that the number of opioids being supplied to counties in New Jersey is strongly related to an increased number of prescription opioid related hospitalizations.</strong> Even outside of the modeling work done, the raw numbers of opioid pills being supplied to these counties over the years in the data is concerning. Further analysis and more data is needed to exactly quantify the effect of the opioid pill supply on New Jersey counties, and programs like <a href="https://www.cdc.gov/drugoverdose/foa/state-opioid-mm.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fdrugoverdose%2Fdata%2Fnonfatal%2Fcdc-esoos.html" target="_blank">CDC’s Enhanced State Opioid Overdose Surveillance (ESOOS)</a>, of which New Jersey is a part of, could be a potentially rich source of information for these future analyses and models.</p>
+<p>Ideally, this analysis could be extended to all counties in the United States. Perhaps a future project!</p>
 </div>
-<div id="handling-years-in-counties" class="section level2">
-<h2>Handling years in counties</h2>
+<div id="appendix" class="section level2">
+<h2>Appendix</h2>
+<div id="choosing-a-model" class="section level3">
+<h3>Choosing a model</h3>
 <p>For this section, I will assume some familiarity with linear regression and its associated terminology.</p>
-<div id="hierarchies-in-data" class="section level3">
-<h3>Hierarchies in data</h3>
-<p>The data we’ve been looking at so far, county level observations repeatedly measured for each year, naturally creates a hierarchy (years nested in counties). Observational hierarchies in data violate a standard assumption of linear regression - after controlling for all included variables in a study, the residuals from each observation are independent. The yearly number of hospital visits within each county will be correlated, and therefore the residuals from a linear regression are also likely to be correlated. We are forced to use some other method besides linear regression or its extensions like the general linear model.</p>
-<p>I am a newcomer to hierarchical data analysis, but from my research I found there to be three general approaches. One of the methods, generalized estimating equations (GEE), has minimal assumptions on the relationship between independent and dependent variables (always nice), but inferences from this model are restricted to your data’s population mean. Although I run a GEE for a robustness check of my results, I ideally wanted to be able to make inferences at the county level (i.e. I’d like to be able to say “I expect a county in New Jersey to have an increase in its prescription-opioid hospitalizations when a variable changes…” over “I expect New Jersey to have an increase in its prescriptions opioid hospitalizations when a county-level variable changes…” ).</p>
-<p>The other two methods, fixed effects and random effects models, are closely linked. The terms fixed effects and random effects have different <a href="https://stats.stackexchange.com/a/4702" target="_blank">meanings and interpretations</a> depending on who is using them. For our simple explanation, suffice to say that a fixed-effects model controls for a hierarchical structure by including variables related to each group in the hierarchy (in our case, a binary variable for each county, equalling 1 if the observation is in the county).</p>
+<p>Every observation in our data is a year in a county, repeated measures that create a nested hiearchy. Observational hierarchies in data violate a standard assumption of linear regression - after controlling for all included variables in a study, the residuals from each observation are independent. The yearly number of hospital visits within each county will be correlated, and therefore the residuals from a linear regression are also likely to be correlated. We are forced to use some other method besides linear regression or its extensions like the general linear model.</p>
+<p>From my research, I found three general approaches to hierarchecal data analysis:</p>
+<ul>
+<li>Generalized Estimating Equations (GEE)</li>
+<li>Fixed-Effects Modeling</li>
+<li>Random-Effects Modeling</li>
+</ul>
+<p>GEEs have minimal assumptions on the relationship between independent and dependent variables (always nice), but inferences from this model are restricted to your data’s population mean. Although I run a GEE for a robustness check of my results, I ideally wanted to be able to make inferences at the county level (i.e. I’d like to be able to say “I expect a county in New Jersey to have an increase in its prescription-opioid hospitalizations when a variable changes…” over “I expect New Jersey to have an increase in its prescriptions opioid hospitalizations when a county-level variable changes…” ).</p>
+<p>The other two methods, fixed-effects and random-effects models, are closely linked.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> For this simple explanation, suffice to say that a fixed-effects model controls for a hierarchical structure by including variables related to each group in the hierarchy (in our case, a binary variable for each county, equalling 1 if the observation is in the county).</p>
 <div style="margin-bottom: 20px">
 
 </div>
@@ -131,543 +727,13 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 </tr>
 </tbody>
 </table>
-<p>This is nice because any time-invariant effects we are not controlling for in the model are pooled together and controlled for by this county indicator variable. However, you can only estimate within-county effects (an increase in the yearly prescription rate for a single county), not between county effects (an increase in the overall mean prescription rate of a county) as those between county effects are perfectly correlated with the county indicator variable. Random effects models (aka the mixed effects model, aka the hierarchical linear model, aka the multilevel model, etc.) try to explicitly model the hierarchical differences by allowing estimates for the effect of a variable to vary by group (they are “random” in the sense that each group’s version of the effect varies around an estimated mean effect). The classical example of a random effect in a model is the random intercept, where every group is allowed to have its own intercept (<span class="math inline">\(\beta_0\)</span> in linear regression). In the context of our data, each county starts out with different numbers of hospitalizations when their independent variables are set to 0. However, the effect of each variable on hospitalizations is set to be constant across counties.</p>
-<div style="margin-bottom:20px;">
-
-</div>
-<p><img src="/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>For a significantly more in-depth but still accessible account of these two models, I recommend <a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/0334A27557D15848549120FE8ECD8D63/S2049847014000077a.pdf/explaining_fixed_effects_random_effects_modeling_of_timeseries_crosssectional_and_panel_data.pdf" target="_blank">Bell and Jones, 2015</a>, which helped me tremendously in understanding the underlying concepts of these models in a practical, straightforward way. For reasons discussed in the aformentioned paper, as well as my own desire to estimate the between effects of variables, I chose to model prescription opioid hospitalizations with a random-effects model.</p>
-</div>
-<div id="random-intercept-model" class="section level3">
-<h3>Random-Intercept Model</h3>
-<p>The years of hospitalization data span from 2008 to 2015, while the ARCOS data goes from 2006 to 2014. This presented an issue when creating the model. If we simply took the number of county-year observations from the overlap of these two datasets, we would have only 147 observations for the 21 counties in New Jersey, a lot less than we started with. And we didn’t start with a lot of data. So partially motivated by trying to maximize the number of observations, and partially because there could legitamately be a lag in the effect of opiate pill supply (dependence on a substance that could lead to an eventual hospitalization takes some nonzero amount of time to develop), I lagged the ARCOS data by one year to match up with the hospitalization data. Prescription rate data is also lagged by one year to match up with the ARCOS data. Despite the change, we do still lose the 2006 year of ARCOS data. So with that, we are left with 168 observations in our final dataset, 21 counties and 8 years of data, from 2008 to 2015.</p>
-<p>I use a Poisson distribution (a commonly used distribution to model count data) with a log link and a random intercept to model number of hospitaliztions, and the <code>lme4::glmer</code> from the <a href="https://cran.r-project.org/web/packages/lme4/index.html" target="_blank">lme4 package</a> to estimate the model. Indicator variables for each year of data are included to account for any potential differences in the data gathering process from year to year. I mentioned earlier that I want to estimate “between effects”, variables that measure differences between counties, not just changes from year-to-year within a county. To do this, I use the “within-between” formulation found in <a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/0334A27557D15848549120FE8ECD8D63/S2049847014000077a.pdf/explaining_fixed_effects_random_effects_modeling_of_timeseries_crosssectional_and_panel_data.pdf" target="_blank">Bell and Jones, 2015</a>, itself a modification of the formula found in <a href="https://www.jstor.org/stable/1913646?seq=1" target="_blank">Mundlak, 1978</a>, and county-mean center all the variables and add a county-mean version of almost every variable to the model. For example, the mean unemployment rate over the years of the data for a county is subtracted from each year of unemployment rate data for that county, and the county-level mean of unemployment rate is also included as a variable. The county-mean of the demographic variables are not included for a few reasons. The number of observations in the data is small so I wanted to be careful with adding too many variables into the model. The Akaike information criterion (AIC), a common measure of relative model fit, went up slightly when adding these variables (indicating a worse model fit) and the residual diagnostics (discussed below) indicated a worse fit as well. Since these variables were primarily included as controls, I felt comfortable leaving them out for now.</p>
-</div>
-</div>
-<div id="results" class="section level2">
-<h2>Results</h2>
-<p>Below are the resulting estimates for the coefficients of the model. I translated the coefficients to be percent changes in the number of prescription opioid related hospitalizations per 10,000 residents of a county. The variables have also been translated to units that I thought would be more interpretable and add context. A statistically significant term can be interpreted as changing the number of prescription opioid related hospitalizations per 10,000 by x%, controlling for the other variables. For “within effects”, this change is for a county in a year, while for “between effects”, this change is in the average number of hospitalizations for a county. Bold variables are statistically significat at the 0.05 level. In parentheses, are the percent change estimates 2 standard errors below and above the point estimate.</p>
-<div style="margin-bottom:20px;">
-
-</div>
-<style>html {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
-}
-
-#qbzhbggqdd .gt_table {
-  display: table;
-  border-collapse: collapse;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#qbzhbggqdd .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#qbzhbggqdd .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#qbzhbggqdd .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 0;
-  padding-bottom: 4px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#qbzhbggqdd .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#qbzhbggqdd .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#qbzhbggqdd .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#qbzhbggqdd .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#qbzhbggqdd .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#qbzhbggqdd .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#qbzhbggqdd .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#qbzhbggqdd .gt_group_heading {
-  padding: 8px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#qbzhbggqdd .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#qbzhbggqdd .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#qbzhbggqdd .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#qbzhbggqdd .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#qbzhbggqdd .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#qbzhbggqdd .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 12px;
-}
-
-#qbzhbggqdd .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#qbzhbggqdd .gt_first_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-}
-
-#qbzhbggqdd .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#qbzhbggqdd .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#qbzhbggqdd .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#qbzhbggqdd .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#qbzhbggqdd .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding: 4px;
-}
-
-#qbzhbggqdd .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#qbzhbggqdd .gt_sourcenote {
-  font-size: 90%;
-  padding: 4px;
-}
-
-#qbzhbggqdd .gt_left {
-  text-align: left;
-}
-
-#qbzhbggqdd .gt_center {
-  text-align: center;
-}
-
-#qbzhbggqdd .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#qbzhbggqdd .gt_font_normal {
-  font-weight: normal;
-}
-
-#qbzhbggqdd .gt_font_bold {
-  font-weight: bold;
-}
-
-#qbzhbggqdd .gt_font_italic {
-  font-style: italic;
-}
-
-#qbzhbggqdd .gt_super {
-  font-size: 65%;
-}
-
-#qbzhbggqdd .gt_footnote_marks {
-  font-style: italic;
-  font-size: 65%;
-}
-</style>
-<div id="qbzhbggqdd" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
-  <thead class="gt_header">
-    <tr>
-      <th colspan="3" class="gt_heading gt_title gt_font_normal" style>Poisson Random Intercept Model Results</th>
-    </tr>
-    <tr>
-      <th colspan="3" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style></th>
-    </tr>
-  </thead>
-  <thead class="gt_col_headings">
-    <tr>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Independent Variable<sup class="gt_footnote_marks">1</sup></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Percent Change in Prescription Opioid Related Hopsitalizations (per 10,000)</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">p-value</th>
-    </tr>
-  </thead>
-  <tbody class="gt_table_body">
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">Between</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Average Opioids per Capita from 2007-2014 (in 5 pill increments)</strong></p>
-</div></td>
-      <td class="gt_row gt_left">23.71 (6.33, 43.92)</td>
-      <td class="gt_row gt_right">0.00</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Average Prescription Rate from 2007-2014</p>
-</div></td>
-      <td class="gt_row gt_left">-0.42 (-2.07, 1.25)</td>
-      <td class="gt_row gt_right">0.61</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Average Unemployment Rate</strong></p>
-</div></td>
-      <td class="gt_row gt_left">-14.71 (-23.21, -5.28)</td>
-      <td class="gt_row gt_right">0.00</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Average Median Household Income (In 2015 USD $10,000s)</strong></p>
-</div></td>
-      <td class="gt_row gt_left">-14.66 (-24.48, -3.56)</td>
-      <td class="gt_row gt_right">0.01</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Average Percent Receiving SSI Blind &amp; Disability Benefits (in tenths of a percentage point)</p>
-</div></td>
-      <td class="gt_row gt_left">0.25 (-1.44, 1.96)</td>
-      <td class="gt_row gt_right">0.77</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2009</p>
-</div></td>
-      <td class="gt_row gt_left">-2.32 (-25.37, 27.85)</td>
-      <td class="gt_row gt_right">0.86</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2010</p>
-</div></td>
-      <td class="gt_row gt_left">-1.68 (-27.22, 32.82)</td>
-      <td class="gt_row gt_right">0.91</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2011</p>
-</div></td>
-      <td class="gt_row gt_left">11.3 (-16.36, 48.1)</td>
-      <td class="gt_row gt_right">0.45</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2012</p>
-</div></td>
-      <td class="gt_row gt_left">6.18 (-19.65, 40.31)</td>
-      <td class="gt_row gt_right">0.67</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2013</p>
-</div></td>
-      <td class="gt_row gt_left">2.73 (-17.13, 27.35)</td>
-      <td class="gt_row gt_right">0.80</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Year 2014</p>
-</div></td>
-      <td class="gt_row gt_left">9.07 (-6.68, 27.47)</td>
-      <td class="gt_row gt_right">0.27</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Year 2015</strong></p>
-</div></td>
-      <td class="gt_row gt_left">30.69 (10.99, 53.88)</td>
-      <td class="gt_row gt_right">0.00</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">Within</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Opioids per Capita in Previous Year (in 5 pill increments)</p>
-</div></td>
-      <td class="gt_row gt_left">5.11 (-1.94, 12.66)</td>
-      <td class="gt_row gt_right">0.15</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Prescription Rate in Previous Year</p>
-</div></td>
-      <td class="gt_row gt_left">1.01 (-0.05, 2.08)</td>
-      <td class="gt_row gt_right">0.06</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Unemployment Rate</p>
-</div></td>
-      <td class="gt_row gt_left">1.4 (-5.4, 8.7)</td>
-      <td class="gt_row gt_right">0.69</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Median Household Income (In 2015 USD $10,000s)</p>
-</div></td>
-      <td class="gt_row gt_left">1.47 (-8.33, 12.31)</td>
-      <td class="gt_row gt_right">0.77</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent of White Alone</p>
-</div></td>
-      <td class="gt_row gt_left">-0.35 (-1.61, 0.93)</td>
-      <td class="gt_row gt_right">0.59</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent of Black or African-American Alone</p>
-</div></td>
-      <td class="gt_row gt_left">0.73 (-3.4, 5.04)</td>
-      <td class="gt_row gt_right">0.73</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p><strong>Percent Receiving SSI Blind &amp; Disability Benefits (in tenths of a percentage point)</strong></p>
-</div></td>
-      <td class="gt_row gt_left">4.12 (1, 7.33)</td>
-      <td class="gt_row gt_right">0.01</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent of 18 or younger</p>
-</div></td>
-      <td class="gt_row gt_left">2.63 (-3.55, 9.21)</td>
-      <td class="gt_row gt_right">0.40</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent between 18 and 34 years old</p>
-</div></td>
-      <td class="gt_row gt_left">0.3 (-5.53, 6.5)</td>
-      <td class="gt_row gt_right">0.92</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left"><div class='gt_from_md'><p>Percent between 35 to 59 years old</p>
-</div></td>
-      <td class="gt_row gt_left">-3.05 (-7.86, 2.02)</td>
-      <td class="gt_row gt_right">0.22</td>
-    </tr>
-  </tbody>
-  
-  <tfoot>
-    <tr class="gt_footnotes">
-      <td colspan="3">
-        <p class="gt_footnote">
-          <sup class="gt_footnote_marks">
-            <em>1</em>
-          </sup>
-           
-          The random intercept has raw estimate of 2 and a standard deviation of 0.16, with a p-value of 0.02
-          <br />
-        </p>
-      </td>
-    </tr>
-  </tfoot>
-</table></div>
-<div style="margin-bottom:20px;">
-
-</div>
-<p>The main takeaway from the estimates is that there is indeed an association between the supply of opioid pills to a county and its prescription opioid hospitalization rate. More specifically, controlling for the demographic and economic descriptors, and controlling for the percent of the population that is receiving blind and/or disability SSI benefits, a county in New Jersey with a 5 pills per capita higher average number of prescription opioids supplied can be expected to have 23.71% more prescription opioid related hospitalizations per 10,000 residents.</p>
-<p><img src="/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<p>Looking at some of the other significant variables, an increase in the average median household income for a county is associated with lower average prescription opioid related hospitalizations, controlling for other variables. An increase in 0.1 of a percent of residents receiving SSI Blind and/or Disability benefits in a year is associated with more opioid pill related hospitalizations in that year, controlling for other variables. Additionally, the year 2015 is statistically significant and associated with a higher prescription opioid hospitalization rate. This most likely reflects the change in coding of hospitalization visits in the fourth quarter of 2015, an update of the International Classification of Diseases, Clinical Modification (ICD-CM) to the 10th revision. Prescription rate in the previous year is on the border of statistical significance and it is possible with more data (and therefore more statistical power), its estimate would be significant.</p>
-<p>These results are in line with my intuition for the expected relationships between these variables. However, an unintuitive result shows up with unemployment rate. A higher average unemployment rate for a county is associated with a lower number of prescription opioid related hospitalizations. Although, this relationship might be an indicator of model validity, it makes more sense when looking more closely at the interpretation. When interpretting the percent change effect of a variable, the other variables are held constant. When looking at the unemployment rate and hospitalization relationship grouped by binned number of opioids supplied per capita, negative relationships can arise within a bin (the 40 group especially has a strong negative relationship).</p>
+<p>This is nice because any time-invariant effects we are not controlling for in the model are pooled together and controlled for by this county indicator variable. However, you can only estimate within-county effects (how an increase in the yearly prescription rate for a single county effects hospitalizations), not between county effects (how an increase in the overall mean prescription rate of a county effects hospitalizations) as those between county effects are perfectly correlated with the county indicator variable. Random-effects models (aka the mixed effects model, aka the hierarchical linear model, aka the multilevel model, etc.) try to explicitly model the hierarchical differences by allowing estimates for the effect of a variable to vary by group (they are “random” in the sense that each group’s version of the effect varies around an estimated mean effect). The classical example of a random effect in a model is the random intercept, where every group is allowed to have its own intercept (<span class="math inline">\(\beta_0\)</span> in linear regression). In the context of this data, each county starts out with different numbers of hospitalizations when their independent variables are set to 0. However, the effect of each variable on hospitalizations is set to be constant across counties.</p>
 <div style="margin-bottom:20px;">
 
 </div>
 <p><img src="/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<p>So although it is unintuitive initially, the negative effect is actually not completely out of left-field, and since the goal of this analysis is to parse out the effect of the opioid pill supply for a county and not specific aspects of its economy, I will leave this relationship to future work.</p>
+<p>For a significantly more in-depth but still accessible account of these two models, I recommend <a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/0334A27557D15848549120FE8ECD8D63/S2049847014000077a.pdf/explaining_fixed_effects_random_effects_modeling_of_timeseries_crosssectional_and_panel_data.pdf" target="_blank">Bell and Jones, 2015</a>, which helped me tremendously in understanding the underlying concepts of these models in a practical, straightforward way. Due to my desire to estimate the between effects of variables and for reasons outlined in the aformentioned paper, I chose to model prescription opioid hospitalizations with a random-intercept model.</p>
+</div>
 <div id="model-diagnostics" class="section level3">
 <h3>Model Diagnostics</h3>
 <p>To ensure the legitamacy of the results from this model, we need to check some of its assumptions. In ordinary linear regression, this is often done by looking at the residuals. However, with a count outcome, often the data is grouped around a few numbers. With the hierarchical structure of our data, this strong grouping only intensifies. This makes it difficult to check classic pearson or deviance residuals and make informative conclusions. However, the R package <a href="https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html" target="_blank">DHARMa</a> provides a method to check randomized quantile residuals. Randomized quantile residuals are a simulation based approach to checking model validity. Creating these residuals is done by first estimating an empirical cumulative density function (CDF) from the predicted values of the model. Then the actual observational outcome data is checked against the CDF, and the quantile it falls in is recorded. For example, a recorded quantile of 0.75 means that 75% of the predicted data falls below that observation. The “randomized” part of this process is the transformation of an integer outcome into a smooth CDF, which requires adding a random value to the predictions. This is usually chosen from a random uniform distribution. Intuitively, one would think that if the model is guessing wrong in a non-systematic way then the spread of the observations along the quantiles will be pretty even. Indeed, <a href="https://math.usask.ca/~longhai/researchteam/theses/alithesis.pdf" target="_blank">Sadeghpour (2016)</a> showed that if the model accurately reflects the data generating process of the observations, then the randomized quantile residuals will follow a normal distribution.</p>
@@ -683,8 +749,13 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 <p>As a robustness check of the results of this model, I ran Generalized Estimating Equations (GEE) regression, which has fewer assumptions but more restrictive interpretations for the hypothesis of interest. The same exact data and variables were included and results were not drastically different. The average opioids per capita of a county had a p-value just outside of the statistically significant range at 0.05, but this is not enough to raise alarm bells, given how sensitive I found the GEE to specification. Interestingly, prescription rate in the previous year is statistically significant in the GEE (it was just on the border of the random intercept model). The other variables that were statistically significant remain the same, with identical directions for their effects. I am much more worried about possible misspecification of the model in terms of ommitted variables, than the distributional assumptions that a GEE gets around, but its results do not take away from the evidence put forth by the random intercept model.</p>
 </div>
 </div>
-<div id="final-thoughts" class="section level2">
-<h2>Final Thoughts</h2>
-<p>Did I create a model that controls for all the institutional effects happening within a county that could impact its number of prescription opioid hospitalizations? Definitely not! Are there issues with the data I use in this analysis. Sure! ACS 1 year estimates can be imprecise, one can imagine issues with classifying a hospitalization as related to prescription opioid abuse, and for a complex model there are only 168 observations. However, given the available data, I think there is still enough evidence to say that the number of opioids being supplied to counties in New Jersey is strongly related to an increased number of prescription opioid related hospitalizations. Even outside of the modeling work done, the raw numbers of opioid pills being supplied to these counties over the years in the data is concerning. Further analysis and more data is needed to exactly quantify the effect of the opioid pill supply on New Jersey counties, and programs like <a href="https://www.cdc.gov/drugoverdose/foa/state-opioid-mm.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fdrugoverdose%2Fdata%2Fnonfatal%2Fcdc-esoos.html" target="_blank">CDC’s Enhanced State Opioid Overdose Surveillance (ESOOS)</a>, of which New Jersey is a part of, could be a potentially rich source of information for these future analyses and models.</p>
-<p>Ideally, this analysis could be extended to all counties in the United States. Perhaps a future project!</p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The underlying data from the dashboard actually comes from the <a href="https://www.nj.gov/health/healthcarequality/health-care-professionals/njddcs/" target="_blank">NJ Hospital Discharge Data Collection System (NJDDCS)</a>. The NJDDCS collects its data from electronically submitted claims for health care provided in a hospital or electronic submitted exchanges of claims information between payers. Payers in this case being either the individual, business, or insurance company paying for a healthcare service.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>The actual data supporting these maps and tables comes from the IQVIA Xponent 2006–2018 data, a sample of approximately 49,900 retail (non-hospital) pharmacies, which dispense nearly 92% of all retail prescriptions in the United States. From the CDC Website, a prescription in this data is defined as “an initial or refill prescription dispensed at a retail pharmacy in the sample and paid for by commercial insurance, Medicaid, Medicare, cash or its equivalent. This database does not include mail order prescriptions.” Unfortunately, there is no guarantee that the person obtaining a prescription lives in that county, which adds uncertainty to the rate numbers provided by this data.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>A more thorough discussion of choosing ACS estimates can be found in Appendix 1 of <a href="https://www.psc.isr.umich.edu/dis/acs/handouts/Compass_Appendix.pdf" target="_blank">University of Michigan’s ACS guidelines</a>.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>The prescription rate in the previous year is not quite statistically significant at the 0.05 level, but is close enough that I wanted it to also stand out.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>The terms fixed effects and random effects have different <a href="https://stats.stackexchange.com/a/4702" target="_blank">meanings and interpretations</a> depending on who is using them.<a href="#fnref5" class="footnote-back">↩</a></p></li>
+</ol>
 </div>
