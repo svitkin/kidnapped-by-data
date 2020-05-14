@@ -26,6 +26,7 @@ library(purrr)
 library(tidyr)
 library(ggplot2)
 library(htmltools)
+library(DHARMa)
 
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
@@ -286,7 +287,7 @@ read_arcos_data("poisson-pctchange-table.rds")
 
 The main takeaway from the estimates is that there is indeed an association between the supply of opioid pills to a county and its prescription opioid hospitalization rate. More specifically, <strong>controlling for the demographic and economic descriptors, and controlling for the percent of the population that is receiving blind and/or disability SSI benefits, a county in New Jersey with a 5 pills per capita higher average number of prescription opioids supplied can be expected to have `r mdl_df %>% filter(term == "mean_lag_opioids") %>% pull(pctg) %>% round(2)`% more prescription opioid related hospitalizations per 10,000 residents</strong>. 
 
-```{r}
+```{r model-effect-plot}
 display_arcos_plot("model-plot.rds", static = TRUE)
 ```
 
@@ -296,7 +297,7 @@ These results are in line with my intuition for the expected relationships betwe
 
 <div style="margin-bottom:20px;"></div>
 
-```{r}
+```{r unemp-example}
 display_arcos_plot("unemp-hosp-example.rds", static = TRUE)
 ```
 
@@ -342,7 +343,7 @@ This is nice because any time-invariant effects we are not controlling for in th
 
 <div style="margin-bottom:20px;"></div>
 
-``` {r}
+``` {r random-intercept-example}
 set.seed(4321)
 
 x <- rnorm(100)
@@ -374,7 +375,7 @@ Modeling hospitalization counts with a poisson distribution adds an assumption o
 
 <div style="margin-bottom:20px;"></div>
 
-```{r}
+```{r resid-diagnostics}
 resids <- read_arcos_data("simulated-residuals.rds")
 plot(resids)
 ```
@@ -383,9 +384,7 @@ The overdispersion test from the <a href="https://easystats.github.io/performanc
 
 The quantile residuals seem to be normally distributed according to the QQ plot and there is no obvious pattern in the plot of the predicted values and the quantile residuals. The variance of the residuals also stays constant along the range of the model predictions. The black line with the shaded confidence intervals on the Residuals vs. Predicted plot are the results of a quantile regression in DHARMa, showing a comparison of the empirically derived quantiles residuals and the ideal quantile intervals (the default of 0.25, 0.50, and 0.75). The quantile regression is run by regressing the model predictions onto one of the quantiles of the empirically derived residuals. Ideally, one would want to see no relationship between the model predictions and any residual quantile. This is also true of the independent variables. A relationship between an independent variable and a quantile of the residuals could indicate there is an important variable missing from the model or some other misspecification that could mean  bias in the estimates. 
 
-``` {r}
-library(DHARMa)
-
+``` {r resid-lag-opioids}
 plotResiduals(resids, 
               form = read_arcos_data("poisson-model-object.rds")@frame$lag_opioids, 
               xlab = "Scaled by 100 and Mean Centered: Opioid Pills Supplied per capita in Previous Year")
