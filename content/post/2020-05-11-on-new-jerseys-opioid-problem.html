@@ -10,7 +10,7 @@ tags:
   - plotly
   - ARCOS
   - opioids
-summary: I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I've read news reports on the prescription opioid epidemic, but I've never done a deep dive into the data behind the epidemic to learn more.
+summary: I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I've read news reports on the prescription opioid epidemic, but I've never done a deep dive into the data behind the epidemic.
 ---
 
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
@@ -18,15 +18,15 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 <script src="/rmarkdown-libs/widgetframe-binding/widgetframe.js"></script>
 
 
-<p>I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I’ve read news reports on the prescription opioid epidemic, but I’ve never done a deep dive into the data behind the epidemic to learn more.</p>
+<p>I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I’ve read news reports on the prescription opioid epidemic, but I’ve never done a deep dive into the data behind the epidemic.</p>
 <p>After some research, I found the <a href="https://wpinvestigative.github.io/arcos/" target="_blank">Automation of Reports and Consolidated Orders System (ARCOS) database</a>. The data from ARCOS is owned by the Drug Enforcement Agency (DEA), but was released by the Washington Post on July 16th, 2019, after a long legal battle in conjunction with the Charleston Gazette-Mail of West Virginia. ARCOS tracks the supply side of opioid pills in the United States, with data on every prescription opioid pill sold from a manufacturer to a pharmacy from 2006 to 2014.</p>
-<p>Focusing on my home state, I wanted to understand how much the supply of opioid pills is associated with negative public health outcomes. I discovered that there is indeed an association - <strong>in particular, an increase in the number of pills supplied per capita to a county in New Jersey is associated with more prescription opioid related hospitalizations.</strong> The rest of this post is focused on how I came to that conclusion and the nuance surrounding it.</p>
-<p>The opioid epidemic is far reaching, and the ARCOS database is an invaluable resource for understanding it. For national coverage and analysis of ARCOS, check out the <a href="https://www.washingtonpost.com/national/2019/07/20/opioid-files/?arc404=true" target="_blank">Washington Post’s collection of articles</a>. For local reports on ARCOS, check out the Washington Post’s <a href="https://www.washingtonpost.com/national/2019/08/12/post-released-deas-data-pain-pills-heres-what-local-journalists-are-using-it/" target="_blank">other collection of articles</a>. For an existing analysis of this data for New Jersey, I highly recommend <a href="https://www.nj.com/data/2019/07/tracking-the-15-billion-painkillers-that-flooded-nj-and-sparked-an-epidemic-thats-killed-nearly-20k.html" target="_blank">NJ.com’s article</a>, which is filled with some excellent data visualizations and reporting that offers a great summary of how badly impacted New Jersey has been by the flood of prescription pills into its communities.</p>
+<p>Focusing on my home state, I wanted to understand how much the supply of opioid pills is associated with negative public health outcomes. I discovered that there is indeed an association - <strong>in particular, that an increase in the number of pills supplied per capita to a county in New Jersey is associated with more prescription opioid related hospitalizations.</strong> The rest of this post provides the analysis informing that conclusion and explores some of the nuance surrounding it.</p>
+<p>The opioid epidemic is far reaching, and the ARCOS database is an invaluable resource for understanding it. For national coverage and analysis of ARCOS, check out the <a href="https://www.washingtonpost.com/national/2019/07/20/opioid-files/?arc404=true" target="_blank">Washington Post’s collection of articles</a>. For local reports on ARCOS, check out the Washington Post’s <a href="https://www.washingtonpost.com/national/2019/08/12/post-released-deas-data-pain-pills-heres-what-local-journalists-are-using-it/" target="_blank">other collection of articles</a>. For an existing analysis of this data for New Jersey, I highly recommend <a href="https://www.nj.com/data/2019/07/tracking-the-15-billion-painkillers-that-flooded-nj-and-sparked-an-epidemic-thats-killed-nearly-20k.html" target="_blank">NJ.com’s article</a>, which is filled with excellent data visualizations and reporting, summarizing the impact of the flood of prescription pills into New Jersey’s communities.</p>
 <p>All code and data for the analyses from this post can be found at the associated <a href="https://github.com/svitkin/arcos-project" target="_blank">github repository</a>.</p>
 <div id="about-the-data" class="section level2">
 <h2>About the Data</h2>
-<div id="hospitlizations" class="section level3">
-<h3>Hospitlizations</h3>
+<div id="hospitalizations" class="section level3">
+<h3>Hospitalizations</h3>
 <p>I model the impact of the opioid pill supply on New Jersey by trying to find its effect on a negative public health outcome, prescription opioid related hospital visits. My testable hypothesis is: <strong>An increase in the number of opioid pills supplied per capita to New Jersey counties is associated with an increased number of prescription opioid related hospital visits.</strong></p>
 <p>NJ.gov has a <a href="https://www.nj.gov/health/populationhealth/opioid/opioid_hospital.shtml" target="_blank">data dashboard on drug-related hospital visits</a> from 2008 to 2018<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, which has enough overlap with the years of ARCOS data to be usable. It is also one of the few public health outcomes I could find with full data, as many counts (like opioid related mortality) are suppressed for privacy reasons.</p>
 <div style="margin-bottom:50px;">
@@ -97,12 +97,12 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 <li>Social Security Administration’s data on Blind and/or Disability Benefits</li>
 </ul>
 <p>Each observation in the final dataset is a year within a county. I want the model to not only measure the yearly effect of a variable (i.e. the effect of prescription rate on hospiatlizations for a county in a given year), but also to estimate “between effects”, differences between the average number of prescription opioid related hospitilizations for a county. To do this, I use the “within-between” formulation of the random-intercept model found in <a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/0334A27557D15848549120FE8ECD8D63/S2049847014000077a.pdf/explaining_fixed_effects_random_effects_modeling_of_timeseries_crosssectional_and_panel_data.pdf" target="_blank">Bell and Jones, 2015</a>, itself a modification of the formula found in <a href="https://www.jstor.org/stable/1913646?seq=1" target="_blank">Mundlak, 1978</a>. I county-mean center all the variables, so that for example, each year of opioid supply data in Morris County has the mean number of opioid pills supplied per capita for Morris County subtracted from it. I also include the mean of almost every variable discussed to capture “between effects”. For example, the mean number of opioid pills supplied per capita for each county is included as a variable.</p>
-<p>County-mean demographic variables are not included for a few reasons. The number of observations in the data is small, so I wanted to be careful with adding too many variables into the model. After including these variables in the model, the Akaike information criterion (AIC), a common measure of relative model fit, went up slightly (indicating a worse model fit) and the residual diagnostics (discussed in the Appendix) indicated a worse fit as well. Since these variables were primarily included as controls, I felt comfortable leaving them out for now.</p>
+<p>County-mean demographic variables are not included for a few reasons. The number of observations in the data is small, so I wanted to be careful with adding too many variables into the model. After including these variables in the model, the Akaike information criterion (AIC), a common measure of relative model fit, went up slightly (indicating a worse model fit) and the residual diagnostics (discussed in the <a href="#model-diagnostics">Appendix</a>) indicated a worse fit as well. Since these variables were primarily included as controls, I felt comfortable leaving them out for now.</p>
 <p>I use a Poisson distribution (a commonly used distribution to model count data) with a log link and the <code>lme4::glmer</code> function from the <a href="https://cran.r-project.org/web/packages/lme4/index.html" target="_blank">lme4 package</a> to estimate the model. In addition to the variables discussed before, indicator variables for each year of data are included to account for any potential differences in the data gathering process from year to year.</p>
 </div>
 <div id="model-results" class="section level2">
 <h2>Model Results</h2>
-<p>Below are the resulting estimates for the coefficients of the model. I translated the coefficients to be percent changes in the number of prescription opioid related hospitalizations per 10,000 residents of a county. The variables have also been translated to units that I thought would be more interpretable and add context. A statistically significant term can be interpreted as changing the number of prescription opioid related hospitalizations per 10,000 by x%, controlling for the other variables. For “within effects”, this change is for a county in a year, while for “between effects”, this change is in the average number of hospitalizations for a county. Bold variables are statistically significat at the 0.05 level.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> In parentheses, are the percent change estimates 2 standard errors below and above the point estimate.</p>
+<p>Below are the resulting estimates for the coefficients of the model. I translated the coefficients to be percent changes in the number of prescription opioid related hospitalizations per 10,000 residents of a county. The variables have also been translated to units that I thought would be more interpretable and add context. A statistically significant term can be interpreted as changing the number of prescription opioid related hospitalizations per 10,000 by x%, controlling for the other variables. For “within effects”, this change is for a county in a year, while for “between effects”, this change is in the average number of hospitalizations for a county. Bold variables are statistically significant at the 0.05 level.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> In parentheses, are the percent change estimates 2 standard errors below and above the point estimate.</p>
 <div style="margin-bottom:20px;">
 
 </div>
@@ -110,7 +110,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#lbhymwnlup .gt_table {
+#mdmdnsezyr .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -133,7 +133,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-left-color: #D3D3D3;
 }
 
-#lbhymwnlup .gt_heading {
+#mdmdnsezyr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -145,7 +145,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-right-color: #D3D3D3;
 }
 
-#lbhymwnlup .gt_title {
+#mdmdnsezyr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -155,7 +155,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-bottom-width: 0;
 }
 
-#lbhymwnlup .gt_subtitle {
+#mdmdnsezyr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -165,13 +165,13 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-top-width: 0;
 }
 
-#lbhymwnlup .gt_bottom_border {
+#mdmdnsezyr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lbhymwnlup .gt_col_headings {
+#mdmdnsezyr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -186,7 +186,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-right-color: #D3D3D3;
 }
 
-#lbhymwnlup .gt_col_heading {
+#mdmdnsezyr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -206,7 +206,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   overflow-x: hidden;
 }
 
-#lbhymwnlup .gt_column_spanner_outer {
+#mdmdnsezyr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -218,15 +218,15 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   padding-right: 4px;
 }
 
-#lbhymwnlup .gt_column_spanner_outer:first-child {
+#mdmdnsezyr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lbhymwnlup .gt_column_spanner_outer:last-child {
+#mdmdnsezyr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lbhymwnlup .gt_column_spanner {
+#mdmdnsezyr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -238,7 +238,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   width: 100%;
 }
 
-#lbhymwnlup .gt_group_heading {
+#mdmdnsezyr .gt_group_heading {
   padding: 10px;
   color: #333333;
   background-color: #FFFFFF;
@@ -260,7 +260,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   vertical-align: middle;
 }
 
-#lbhymwnlup .gt_empty_group_heading {
+#mdmdnsezyr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -275,19 +275,19 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   vertical-align: middle;
 }
 
-#lbhymwnlup .gt_striped {
+#mdmdnsezyr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lbhymwnlup .gt_from_md > :first-child {
+#mdmdnsezyr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lbhymwnlup .gt_from_md > :last-child {
+#mdmdnsezyr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lbhymwnlup .gt_row {
+#mdmdnsezyr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -306,7 +306,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   overflow-x: hidden;
 }
 
-#lbhymwnlup .gt_stub {
+#mdmdnsezyr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -318,7 +318,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   padding-left: 12px;
 }
 
-#lbhymwnlup .gt_summary_row {
+#mdmdnsezyr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -328,7 +328,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   padding-right: 5px;
 }
 
-#lbhymwnlup .gt_first_summary_row {
+#mdmdnsezyr .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -338,7 +338,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-top-color: #D3D3D3;
 }
 
-#lbhymwnlup .gt_grand_summary_row {
+#mdmdnsezyr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -348,7 +348,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   padding-right: 5px;
 }
 
-#lbhymwnlup .gt_first_grand_summary_row {
+#mdmdnsezyr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -358,7 +358,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-top-color: #D3D3D3;
 }
 
-#lbhymwnlup .gt_table_body {
+#mdmdnsezyr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -367,7 +367,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-bottom-color: #D3D3D3;
 }
 
-#lbhymwnlup .gt_footnotes {
+#mdmdnsezyr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -381,13 +381,13 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-right-color: #D3D3D3;
 }
 
-#lbhymwnlup .gt_footnote {
+#mdmdnsezyr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#lbhymwnlup .gt_sourcenotes {
+#mdmdnsezyr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -401,46 +401,46 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
   border-right-color: #D3D3D3;
 }
 
-#lbhymwnlup .gt_sourcenote {
+#mdmdnsezyr .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#lbhymwnlup .gt_left {
+#mdmdnsezyr .gt_left {
   text-align: left;
 }
 
-#lbhymwnlup .gt_center {
+#mdmdnsezyr .gt_center {
   text-align: center;
 }
 
-#lbhymwnlup .gt_right {
+#mdmdnsezyr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lbhymwnlup .gt_font_normal {
+#mdmdnsezyr .gt_font_normal {
   font-weight: normal;
 }
 
-#lbhymwnlup .gt_font_bold {
+#mdmdnsezyr .gt_font_bold {
   font-weight: bold;
 }
 
-#lbhymwnlup .gt_font_italic {
+#mdmdnsezyr .gt_font_italic {
   font-style: italic;
 }
 
-#lbhymwnlup .gt_super {
+#mdmdnsezyr .gt_super {
   font-size: 65%;
 }
 
-#lbhymwnlup .gt_footnote_marks {
+#mdmdnsezyr .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="lbhymwnlup" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="mdmdnsezyr" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   <thead class="gt_header">
     <tr>
       <th colspan="3" class="gt_heading gt_title gt_font_normal" style>Poisson Random Intercept Model Results</th>
@@ -662,7 +662,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 <p>The main takeaway from the estimates is that there is indeed an association between the supply of opioid pills to a county and its prescription opioid hospitalization rate. More specifically, <strong>after controlling for the demographic and economic descriptors of a county, its prescription rate, and the percent of its residents receiving blind and/or disability SSI benefits, a county in New Jersey with a 5 pills per capita higher average number of prescription opioids supplied can be expected to have 23.71% more prescription opioid related hospitalizations per 10,000 residents</strong>.</p>
 <p><img src="/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html/model-effect-plot-1.png" width="672" /></p>
 <p>The model also found that an increase in the average median household income for a county is associated with lower average prescription opioid related hospitalizations for that county, controlling for other variables. An increase of 0.1% of a county’s residents receiving SSI Blind and/or Disability benefits is associated with more opioid pill related hospitalizations in that year, controlling for other variables. Additionally, the year 2015 is statistically significant and associated with a higher prescription opioid hospitalization rate. This most likely reflects the change in coding of hospitalization visits in the fourth quarter of 2015, an update of the International Classification of Diseases, Clinical Modification (ICD-CM) to the 10th revision. Prescription rate in the previous year is on the border of statistical significance and it is possible with more data (and therefore more statistical power), its estimate would be significant (of course, the opposite could also be true).</p>
-<p>These results are in line with my intuition for the expected relationships between these variables and hospitlizations. However, an unintuitive result shows up with unemployment rate. A higher average unemployment rate for a county is associated with a lower number of prescription opioid related hospitalizations. Although, this relationship might be an indicator of a modeling or data deficiency, it does makes some sense when looking more closely at the interpretation. When interpretting the percent change effect of a variable, the other variables are held constant. After looking at the unemployment rate and hospitalization relationship grouped by binned number of opioids supplied per capita (with the number of pills now seen as being “held constant” within a bin), negative relationships can arise. The 40 group especially has a strong negative relationship.</p>
+<p>These results are in line with my intuition for the expected relationships between these variables and hospitlizations. However, an unintuitive result shows up with unemployment rate. A higher average unemployment rate for a county is associated with a lower number of prescription opioid related hospitalizations. Although, this relationship might be an indicator of a modeling or data deficiency, it does makes some sense when looking more closely at the interpretation. When interpreting the percent change effect of a variable, the other variables are held constant. After looking at the unemployment rate and hospitalization relationship grouped by binned number of opioids supplied per capita (with the number of pills now seen as being “held constant” within a bin), negative relationships can arise. The 40 group especially has a strong negative relationship.</p>
 <div style="margin-bottom:20px;">
 
 </div>
@@ -682,15 +682,14 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 <h2>Appendix</h2>
 <div id="choosing-a-model" class="section level3">
 <h3>Choosing a model</h3>
-<p>For this section, I will assume some familiarity with linear regression and its associated terminology.</p>
-<p>Every observation in our data is a year in a county, repeated measures that create a nested hiearchy. Observational hierarchies in data violate a standard assumption of linear regression - after controlling for all included variables in a study, the residuals from each observation are independent. The yearly number of hospital visits within each county will be correlated, and therefore the residuals from a linear regression are also likely to be correlated. We are forced to use some other method besides linear regression or its extensions like the general linear model.</p>
+<p>Every observation in our data is a year in a county, repeated measures that create a nested hiearchy. Hierarchies in data violate a standard assumption of linear regression - after controlling for all included variables in a study, the residuals from each observation are independent. The yearly number of hospital visits within each county will be correlated, and therefore the residuals from a linear regression are also likely to be correlated. We are forced to use some other method besides linear regression or its extensions like the general linear model.</p>
 <p>From my research, I found three general approaches to hierarchecal data analysis:</p>
 <ul>
 <li>Generalized Estimating Equations (GEE)</li>
 <li>Fixed-Effects Modeling</li>
 <li>Random-Effects Modeling</li>
 </ul>
-<p>GEEs have minimal assumptions on the relationship between independent and dependent variables (always nice), but inferences from this model are restricted to your data’s population mean. Although I run a GEE for a robustness check of my results, I ideally wanted to be able to make inferences at the county level (i.e. I’d like to be able to say “I expect a county in New Jersey to have an increase in its prescription-opioid hospitalizations when a variable changes…” over “I expect New Jersey to have an increase in its prescriptions opioid hospitalizations when a county-level variable changes…” ).</p>
+<p>GEEs have minimal assumptions on the relationship between independent and dependent variables (always nice), but inferences from this model are restricted to your data’s population mean. Although I run a GEE for a robustness check of my results, I ideally wanted to be able to make inferences at the county level (i.e. I’d like to be able to say “I expect a county in New Jersey to have an increase in its prescription-opioid hospitalizations when a variable changes…” over “I expect New Jersey to have an increase in its prescription opioid hospitalizations when a county-level variable changes…” ).</p>
 <p>The other two methods, fixed-effects and random-effects models, are closely linked.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> For this simple explanation, suffice to say that a fixed-effects model controls for a hierarchical structure by including variables related to each group in the hierarchy (in our case, a binary variable for each county, equalling 1 if the observation is in the county).</p>
 <div style="margin-bottom: 20px">
 
@@ -735,12 +734,12 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 
 </div>
 <p><img src="/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html/random-intercept-example-1.png" width="672" /></p>
-<p>For a significantly more in-depth but still accessible account of these two models, I recommend <a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/0334A27557D15848549120FE8ECD8D63/S2049847014000077a.pdf/explaining_fixed_effects_random_effects_modeling_of_timeseries_crosssectional_and_panel_data.pdf" target="_blank">Bell and Jones, 2015</a>, which helped me tremendously in understanding the underlying concepts of these models in a practical, straightforward way. Due to my desire to estimate the between effects of variables and for reasons outlined in the aformentioned paper, I chose to model prescription opioid hospitalizations with a random-intercept model.</p>
+<p>For a significantly more in-depth but still accessible account of these two models, I recommend <a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/0334A27557D15848549120FE8ECD8D63/S2049847014000077a.pdf/explaining_fixed_effects_random_effects_modeling_of_timeseries_crosssectional_and_panel_data.pdf" target="_blank">Bell and Jones, 2015</a>, which helped me tremendously in understanding the underlying concepts of these models in a practical, straightforward way. Due to my desire to estimate the between effects of variables and for reasons outlined in the aforementioned paper, I chose to model prescription opioid hospitalizations with a random-intercept model.</p>
 </div>
 <div id="model-diagnostics" class="section level3">
 <h3>Model Diagnostics</h3>
-<p>To ensure the legitamacy of the results from this model, we need to check some of its assumptions. Modeling hospitalization counts with a poisson distribution adds an assumption of equidispersion, that the mean and variance of the residuals from our model are the same. More often than not, models suffer from overdispersion. The overdispersion test from the <a href="https://easystats.github.io/performance/reference/check_overdispersion.html" target="_blank">performance</a> package was used to check if the residuals of the model exhibit overdispersion, and the test failed to reject the null hypothesis of equidispersion.</p>
-<p>In ordinary linear regression, many checks of assumptions are done by looking at the residuals. However, with a count outcome, the data is often grouped around a few numbers. With the hierarchical structure of our data, this strong grouping only intensifies. This makes it difficult to check classic pearson or deviance residuals and make informative conclusions. However, the R package <a href="https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html" target="_blank">DHARMa</a> provides a method to check randomized quantile residuals. Randomized quantile residuals are a simulation based approach to checking model validity. Creating these residuals is done by first estimating an empirical cumulative density function (CDF) from the predicted values of the model. Then the actual observational outcome data is checked against the CDF, and the quantile it falls in is recorded. For example, a recorded quantile of 0.75 means that 75% of the predicted data falls below that observation. The “randomized” part of this process is the transformation of an integer outcome into a smooth CDF, which requires adding a random value to the predictions. This is usually chosen from a random uniform distribution. Intuitively, one would think that if the model is guessing wrong in a non-systematic way then the spread of the observations along the quantiles will be pretty even. Indeed, <a href="https://math.usask.ca/~longhai/researchteam/theses/alithesis.pdf" target="_blank">Sadeghpour (2016)</a> showed that if the model accurately reflects the data generating process of the observations, then the randomized quantile residuals will follow a normal distribution.</p>
+<p>To ensure the legitimacy of the results from this model, we need to check some of its assumptions. Modeling hospitalization counts with a poisson distribution adds an assumption of equidispersion, that the mean and variance of the residuals from our model are the same. More often than not, models suffer from overdispersion. The overdispersion test from the <a href="https://easystats.github.io/performance/reference/check_overdispersion.html" target="_blank">performance</a> package was used to check if the residuals of the model exhibit overdispersion, and the test failed to reject the null hypothesis of equidispersion.</p>
+<p>In ordinary linear regression, many checks of assumptions are done by looking at the residuals. However, with a count outcome, the data is often grouped around a few numbers. With the hierarchical structure of our data, this strong grouping only intensifies. This makes it difficult to check classic pearson or deviance residuals and make informed conclusions. However, the R package <a href="https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html" target="_blank">DHARMa</a> provides a method to check randomized quantile residuals. Randomized quantile residuals are a simulation based approach to checking model validity. Creating these residuals is done by first estimating an empirical cumulative density function (CDF) from the predicted values of the model. Then the actual observational outcome data is checked against the CDF, and the quantile it falls in is recorded. For example, a recorded quantile of 0.75 means that 75% of the predicted data falls below that observation. The “randomized” part of this process is the transformation of an integer outcome into a smooth CDF, which requires adding a random value to the predictions. This is usually chosen from a random uniform distribution. Intuitively, one would think that if the model is guessing wrong in a non-systematic way then the spread of the observations along the quantiles will be pretty even. Indeed, <a href="https://math.usask.ca/~longhai/researchteam/theses/alithesis.pdf" target="_blank">Sadeghpour (2016)</a> showed that if the model accurately reflects the data generating process of the observations, then the randomized quantile residuals will follow a normal distribution.</p>
 <div style="margin-bottom:20px;">
 
 </div>
@@ -748,7 +747,7 @@ summary: I was raised in New Jersey and (at this point, like many people) have f
 <p>The quantile residuals seem to be normally distributed according to the QQ plot and there is no obvious pattern in the plot of the predicted values and the quantile residuals. The variance of the residuals also stays constant along the range of the model predictions. The black line with the shaded confidence intervals on the Residuals vs. Predicted plot are the results of a quantile regression in DHARMa, showing a comparison of the empirically derived quantiles residuals and the ideal quantile intervals (the default of 0.25, 0.50, and 0.75). The quantile regression is run by regressing the model predictions onto one of the quantiles of the empirically derived residuals. Ideally, one would want to see no relationship between the model predictions and any residual quantile. This is also true of the independent variables. A relationship between an independent variable and a quantile of the residuals could indicate there is an important variable missing from the model or some other misspecification that could mean bias in the estimates.</p>
 <p><img src="/post/2020-05-11-on-new-jerseys-opioid-problem_files/figure-html/resid-lag-opioids-1.png" width="672" /></p>
 <p>The main variable of interest, opioid pills supplied, does not show any statistically significant quantile deviations (the same is true of the other independent variables). However, there is a quadratic looking pattern. This may indicate that the relationship between opioid supply and hospitalizations could be modeled with a quadratic transformation, or that there is some missing variable(s) accounting for the relationship. I could not get a successful model fit after adding a quadratic opioid supply term, and given the low count of observations, I leave that to future work. If this analysis can be extended to the entire United States, the increased number of observations would allow for more complex relationships to be included in the model.</p>
-<p>As a robustness check of the results of this model, I ran Generalized Estimating Equations (GEE) regression, which has fewer assumptions but more restrictive interpretations for the hypothesis of interest. The same exact data and variables were included and results were not drastically different. The average opioids per capita of a county had a p-value just outside of the statistically significant range at 0.05, but this is not enough to raise alarm bells, given how sensitive I found the GEE to specification. Interestingly, prescription rate in the previous year is statistically significant in the GEE (it was just on the border of the random intercept model). The other variables that were statistically significant remain the same, with identical directions for their effects. I am much more worried about possible misspecification of the model in terms of ommitted variables, than the distributional assumptions that a GEE gets around, but its results do not take away from the evidence put forth by the random intercept model.</p>
+<p>As a robustness check of the results of this model, I ran Generalized Estimating Equations (GEE) regression, which has fewer assumptions but more restrictive interpretations for the hypothesis of interest. The same exact data and variables were included and results were not drastically different. The average opioids per capita of a county had a p-value just outside of the statistically significant range at 0.05, but this is not enough to raise alarm bells, given how sensitive I found the GEE to specification. Interestingly, prescription rate in the previous year is statistically significant in the GEE (it was just on the border of the random intercept model). The other variables that were statistically significant remain the same, with identical directions for their effects. I am much more worried about possible misspecification of the model in terms of omitted variables, than the distributional assumptions that a GEE gets around, but its results do not take away from the evidence put forth by the random intercept model.</p>
 </div>
 </div>
 <div class="footnotes">
