@@ -142,7 +142,7 @@ bind_rows(total_nj_summary_hosp,
 ```
 
 
-Every county in New Jersey has a positive correlation between year and number of hospitalizations, indicating a general increase in prescription opioid related hospitalizations over time.
+Every county in New Jersey has a positive correlation between year and number of prescription opioid related hospitalizations, indicating a general increase in prescription opioid related hospitalizations over time.
 
 ```{r}
 display_arcos_plot("x_of_hospital_visits_per_10_000_residents-county.rds")
