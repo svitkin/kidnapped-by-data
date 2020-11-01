@@ -10,7 +10,7 @@ tags:
   - music
   - leaflet
   - map
-summary: Frank Turner is one of my favorite artists and performers. His albums have been a big part of my life and his live shows are memorable experiences I'd recommend to anyone. He is also one of the hardest working touring musicians out there, having played at well over 2,000 shows since 2004. The respect he has for his craft is inspiring.
+summary: Frank Turner is one of my favorite artists and performers. He is also one of the hardest working touring musicians out there, having played at well over 2,000 shows since 2004. I made a map showing all the stops along the way.
 ---
 
 ## The Map

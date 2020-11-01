@@ -10,7 +10,7 @@ tags:
   - plotly
   - ARCOS
   - opioids
-summary: I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I've read news reports on the prescription opioid epidemic, but I've never done a deep dive into the data behind the epidemic.
+summary: A dive into the data behind the supply of prescription opioid pills.
 ---
 
 
@@ -76,21 +76,18 @@ nj_data <-
            stringsAsFactors = FALSE)
 ```
 
+I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I’ve read news reports on the prescription opioid epidemic, but I’ve never done a deep dive into the data behind the epidemic until now.
 
-I was raised in New Jersey and (at this point, like many people) have friends and family impacted by opioid addiction. I've read news reports on the prescription opioid epidemic, but I've never done a deep dive into the data behind the epidemic.
+The <a href="https://wpinvestigative.github.io/arcos/" target="_blank">Automation of Reports and Consolidated Orders System (ARCOS) database</a> tracks the supply side of opioid pills in the United States, with data on every prescription opioid pill sold from a manufacturer to a pharmacy from 2006 to 2014. The data from ARCOS is owned by the Drug Enforcement Agency (DEA), but was released by the Washington Post on July 16th, 2019, after a long legal battle in conjunction with the Charleston Gazette-Mail of West Virginia. 
 
-After some research, I found the <a href="https://wpinvestigative.github.io/arcos/" target="_blank">Automation of Reports and Consolidated Orders System (ARCOS) database</a>. The data from ARCOS is owned by the Drug Enforcement Agency (DEA), but was released by the Washington Post on July 16th, 2019, after a long legal battle in conjunction with the Charleston Gazette-Mail of West Virginia. ARCOS tracks the supply side of opioid pills in the United States, with data on every prescription opioid pill sold from a manufacturer to a pharmacy from 2006 to 2014.
+Using ARCOS, as well as a variety of other datasets, I found that an increase in the number of pills supplied per capita to a county in New Jersey is associated with more prescription opioid related hospitalizations. The CDC's latest <a href="https://www.cdc.gov/mmwr/volumes/65/rr/rr6501e1.htm?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fmmwr%2Fvolumes%2F65%2Frr%2Frr6501e1er.htm" target="_blank">guidelines</a> for prescribing opioids for chronic pain found that "no evidence shows a long-term benefit of opioids in pain and function versus no opioids for chronic pain with outcomes examined at least 1 year later (with most placebo-controlled randomized trials ≤6 weeks in duration)". Given these guidelines, it is difficult to justify the amount of opioid pills being supplied to New Jersey counties over the years of ARCOS data available.
 
-Focusing on my home state, I wanted to understand how much the supply of opioid pills is associated with negative public health outcomes. I discovered that there is indeed an association - in particular, that an increase in the number of pills supplied per capita to a county in New Jersey is associated with more prescription opioid related hospitalizations. The CDC's latest <a href="https://www.cdc.gov/mmwr/volumes/65/rr/rr6501e1.htm?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fmmwr%2Fvolumes%2F65%2Frr%2Frr6501e1er.htm" target="_blank">guidelines</a> for prescribing opioids for chronic pain found that "no evidence shows a long-term benefit of opioids in pain and function versus no opioids for chronic pain with outcomes examined at least 1 year later (with most placebo-controlled randomized trials ≤6 weeks in duration)". <strong>Given these guidelines, and the findings of the analysis in this post, it is difficult to justify the amount of opioid pills being supplied to New Jersey counties over the years of ARCOS data available.</strong>
-
-The opioid epidemic is far reaching, and the ARCOS database is an invaluable resource for understanding it. For national coverage and analysis of ARCOS, check out the <a href="https://www.washingtonpost.com/national/2019/07/20/opioid-files/?arc404=true" target="_blank">Washington Post's collection of articles</a>. For local reports on ARCOS, check out the Washington Post's <a href="https://www.washingtonpost.com/national/2019/08/12/post-released-deas-data-pain-pills-heres-what-local-journalists-are-using-it/" target="_blank">other collection of articles</a>. For an existing analysis of this data for New Jersey, I highly recommend <a href="https://www.nj.com/data/2019/07/tracking-the-15-billion-painkillers-that-flooded-nj-and-sparked-an-epidemic-thats-killed-nearly-20k.html" target="_blank">NJ.com's article</a>, which is filled with excellent data visualizations and reporting, summarizing the impact of the flood of prescription pills into New Jersey's communities. 
+The opioid epidemic is far reaching, and the ARCOS database is an invaluable resource for understanding it. For national coverage and analysis of ARCOS, check out the <a href="https://www.washingtonpost.com/national/2019/07/20/opioid-files/?arc404=true" target="_blank">Washington Post's collection of articles</a>. For local reports on ARCOS, check out the Washington Post's <a href="https://www.washingtonpost.com/national/2019/08/12/post-released-deas-data-pain-pills-heres-what-local-journalists-are-using-it/" target="_blank">other collection of articles</a>. For an existing analysis of this data for New Jersey, I recommend <a href="https://www.nj.com/data/2019/07/tracking-the-15-billion-painkillers-that-flooded-nj-and-sparked-an-epidemic-thats-killed-nearly-20k.html" target="_blank">NJ.com's article</a>, which is filled with excellent data visualizations and reporting, summarizing the impact of the flood of prescription pills into New Jersey's communities. 
 
 All code and data for the analyses from this post can be found at the associated <a href="https://github.com/svitkin/arcos-project" target="_blank">github repository</a>.
 
 ## About the Data
 ### Hospitalizations
-I model the impact of the opioid pill supply on New Jersey by trying to find its effect on a negative public health outcome, prescription opioid related hospital visits. My testable hypothesis is: <strong>An increase in the number of opioid pills supplied per capita to New Jersey counties is associated with an increased number of prescription opioid related hospital visits.</strong>
-
 NJ.gov has a <a href="https://www.nj.gov/health/populationhealth/opioid/opioid_hospital.shtml" target="_blank">data dashboard on drug-related hospital visits</a> from 2008 to 2018[^1], which has enough overlap with the years of ARCOS data to be usable. It is also one of the few public health outcomes I could find with full data, as many counts (like opioid related mortality) are suppressed for privacy reasons. 
 
 <div style="margin-bottom:50px;"></div>
@@ -124,7 +121,7 @@ bind_rows(total_nj_summary_hosp,
   mutate(buyer_county = as.factor(buyer_county)) %>% 
   datatable(filter = "top",
             colnames = 
-              c("County", "Total # of Prescription Opioid Related Hospitalizations", "Yearly Average Prescription Opioid Related Hospitalizations per 10,000 Residents"),
+              c("County", "Total # of Hospitalizations", "Average # of Hospitalizations per 10,000 Residents per Year"),
             caption = htmltools::tags$caption(
               style = 'caption-side: bottom; text-align: center;',
               htmltools::withTags(
@@ -142,7 +139,7 @@ bind_rows(total_nj_summary_hosp,
 ```
 
 
-Every county in New Jersey has a positive correlation between year and number of prescription opioid related hospitalizations, indicating a general increase in prescription opioid related hospitalizations over time.
+Although it is a rough estimate of trend, every county in New Jersey has a positive correlation between year and number of prescription opioid related hospitalizations. We can at least be sure that over the time period of the data, prescription opioid related hospitalizations are not decreasing.
 
 ```{r}
 display_arcos_plot("x_of_hospital_visits_per_10_000_residents-county.rds")
@@ -152,7 +149,7 @@ display_arcos_plot("x_of_hospital_visits_per_10_000_residents-county.rds")
 
 The ARCOS API wrapper in R has a handy <code>arcos::summarized_county_annual()</code> function that pulls in the number of hydrocodone and oxycodone pills supplied to a county per year. Going forward, when I refer to opioid pills in the context of the ARCOS dataset, I only mean oxycodone and hydrocodone pills. 
 
-The  years of hospitalization data span from 2008 to 2015, while the ARCOS data goes from 2006 to 2014. This presented an issue when combining data for the model. If I simply took the number of county-year observations from the overlap of these two datasets, there would only be 147 observations for the 21 counties in New Jersey, a lot less data than the full 9 years of ARCOS data. So partially motivated by trying to maximize the number of observations, and partially because there could legitimately be a lag in the effect of opiate pill supply (dependence on a substance that could lead to an eventual hospitalization takes some nonzero amount of time to develop), I lagged the ARCOS data by one year to match up with the hospitalization data. Despite that change, I still lose the 2006 year of ARCOS data, bringing us to 168 observations, 21 counties and 8 years of data, from 2008 to 2015.
+The  years of hospitalization data span from 2008 to 2015, while the ARCOS data goes from 2006 to 2014. This presented an issue when combining data for any analysis. If I simply took the number of county-year observations from the overlap of these two datasets, there would only be 147 observations for the 21 counties in New Jersey, a lot less data than the full 9 years of ARCOS data. So partially motivated by trying to maximize the number of observations, and partially because there could legitimately be a lag in the effect of opiate pill supply (dependence on a substance that could lead to an eventual hospitalization takes some nonzero amount of time to develop), I lagged the ARCOS data by one year to match up with the hospitalization data. Despite that change, I still lose the 2006 year of ARCOS data, bringing us to 168 observations, 21 counties and 8 years of data, from 2008 to 2015. In the future, I would like to more rigorously examine my assumption of a lag.
 
 <div style="margin-bottom:30px;"></div>
 
@@ -185,7 +182,7 @@ bind_rows(total_nj_summary_supply,
   mutate(buyer_county = as.factor(buyer_county)) %>% 
   datatable(filter = "top",
             colnames = 
-              c("County", "Total # of Pills", "Yearly Average # of Pills per Capita"),
+              c("County", "Total # of Pills", "Average # of Pills per Capita per Year"),
             caption = htmltools::tags$caption(
               style = 'caption-side: bottom; text-align: center;',
               htmltools::withTags(
@@ -226,7 +223,9 @@ display_arcos_plot("opioid_pills_supplied_per_capita_in_previous_year-w-hosp_vis
 
 ### Prescriptions
 
-I wanted my model of hopsitalizations to include the other side of the legal opioid supply, prescriptions. Data for opioid prescription rates by county (the number of prescriptions per 100 people) can be found on the <a href="https://www.cdc.gov/drugoverdose/maps/rxrate-maps.html" target="_blank">Center for Disease Control's (CDC) prescription rate maps</a>.[^2] For the eventual model of hospitalizations, prescription rate data is also lagged by one year to match up with the ARCOS data. 
+Data for opioid prescription rates by county (the number of prescriptions per 100 people) can be found on the <a href="https://www.cdc.gov/drugoverdose/maps/rxrate-maps.html" target="_blank">Center for Disease Control's (CDC) prescription rate maps</a>.[^2] For the eventual model of hospitalizations, prescription rate data is also lagged by one year to match up with the ARCOS data. 
+
+Interestingly, although the supply to pharmacies of hydrocodone and oxycodone pills is increasing, the prescription rates do not always show the same obvious positive trend. 
 
 <div style="margin-bottom:20px;"></div>
 
@@ -234,7 +233,8 @@ I wanted my model of hopsitalizations to include the other side of the legal opi
 display_arcos_plot("prescription_rate-county.rds")
 ```
 
-Interestingly, although the supply to pharmacies of hydrocodone and oxycodone pills is increasing, the prescription rates do not always show the same obvious positive trend. 
+
+Prescription rates, however, do seem to have a positive relationship with the number of prescription opioid-related hospital visits. The one group of visual outliers from this trend is Cape May. Out of all the counties, Cape May has the highest percentage of its population aged 60 years or older. It has an unusually high proportion of an age demographic that is more likely to get a prescription, but is less likely to be hospitalized for prescription opioid abuse (although the elderly can certainly abuse prescription opioids in a way that leads to hospitalization). 
 
 <div style="margin-bottom:20px;"></div>
 
@@ -242,20 +242,18 @@ Interestingly, although the supply to pharmacies of hydrocodone and oxycodone pi
 display_arcos_plot("prescription_rate_in_previous_year-w-hosp_visits.rds")
 ```
 
-Prescription rates, however, do seem to have a positive relationship with the number of prescription opioid-related hospital visits. The one group of visual outliers from this positive trend is Cape May. Out of all the counties, Cape May has the highest percentage of its population aged 60 years or older over the years of the data. It has an unusually high proportion of an age demographic that is more likely to get a prescriprion, but is less likely to be hospitalized for prescription opioid abuse (although the elderly can certainly abuse prescription opioids in a way that leads to hospitalization). An interesting point for future research.
-
 ### Controlling Variables
 
-To model the effect of the number of opioid pills supplied accurately, I need to control for the other mechanisms that might impact the number of prescription opioid related hospitalizations. To best approximate these other factors, I pulled down demographic and economic characteristics of each county, so at least I can control for the changes in a county's "environment" (i.e. the make-up of its residents and its economic health).
+To model the effect of the number of opioid pills supplied as accurately as possible, I need to control for the other mechanisms that might impact the number of prescription opioid related hospitalizations. To best approximate these other factors, I pulled down demographic and economic characteristics of each county, so at least I can control for the changes in a county's "environment" (i.e. the make-up of its residents and its economic health).
 
 For all demographic (and some economic) characteristics, I used the U.S. Census's American Community Survey (ACS) 1 year estimates, pulled down with the <a href="https://walkerke.github.io/tidycensus/" target="_blank">tidycensus</a> package. The ACS is continually sampled throughout its defined duration, with the 1 year ACS estimates having the smallest sample size of the available ACS datasets (the others being the 3 and 5 year). However, since we are interested in individual years and changes between those years, the 1 year estimates are more suited to our data (except for race categories in Cape May county in 2011, which had missing data for its 1 year estimate and was filled in with the 5 year estimate instead).[^3] I gathered distribution data on race, age, and median household income for each county from 2008 to 2015. Under the <a href="https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch10.pdf" target="_blank">recommendation of the U.S. Census</a>, I used the annual averages from the <a href="https://www.bls.gov/cpi/research-series/home.htm" target="_blank">Consumer Price Index research series</a> to translate the median incomes to 2015 U.S. dollars.
 
 Unemployment rates for each county, as another proxy for economic conditions, were pulled from the <a href="https://www.bls.gov/lau/" target="_blank">Bureau of Labor Statistics (BLS) Local Area Unemployment tables</a>.
 
-Ideally, one would also want to control for how many residents have a legitimate medical need for opioid pills. This is a <a href="https://www.cdc.gov/drugoverdose/prescribing/guideline.html" target="_blank">complex question</a> with an inherent amount of uncertainty around how much pain is appropriate for someone to be prescribed opiates. Although it is not ideal, I use the Social Security Administration's data on the number of recipients of social security benefits for blindness and/or disability. This is not an ideal measurement, as this pools together numbers for many different disabilities and misses members of the population who are not receiving benefits but might have a medical need for an opioid prescription. However, it is currently the best approximation I could find for this concept.
-
 ## Random-Intercept Model
 
+
+I model the impact of the opioid pill supply on New Jersey by trying to find its effect on a negative public health outcome, prescription opioid related hospital visits. My testable hypothesis is: <strong>An increase in the number of opioid pills supplied per capita to New Jersey counties is associated with an increased number of prescription opioid related hospital visits.</strong>
 For reasons discussed in the [Appendix](#choosing-a-model), I chose to model prescription opioid hospitalizations with a random-intercept model.
 
 The final set of data sources for this model are:
@@ -265,17 +263,16 @@ The final set of data sources for this model are:
 * American Community Survey (ACS) 1-year estimates from the <code>tidycensus</code> package
 * Bureau of Labor Statistics (BLS) Local Area Unemployment tables
 * Center for Disease Control’s (CDC) prescription rate maps
-* Social Security Administration's data on Blind and/or Disability Benefits
 
 Each observation in the final dataset is a year within a county. I want the model to not only measure the yearly effect of a variable (i.e. the effect of prescription rate on hospiatlizations for a county in a given year), but also to estimate "between effects", differences between the average number of prescription opioid related hospitilizations for a county. To do this, I use the "within-between" formulation of the random-intercept model found in <a href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/0334A27557D15848549120FE8ECD8D63/S2049847014000077a.pdf/explaining_fixed_effects_random_effects_modeling_of_timeseries_crosssectional_and_panel_data.pdf" target="_blank">Bell and Jones, 2015</a>, itself a modification of the formula found in <a href="https://www.jstor.org/stable/1913646?seq=1" target="_blank">Mundlak, 1978</a>. I county-mean center all the variables, so that for example, each year of opioid supply data in Morris County has the mean number of opioid pills supplied per capita for Morris County subtracted from it. I also include the mean of almost every variable discussed to capture "between effects". For example, the mean number of opioid pills supplied per capita for each county is included as a variable. 
 
-County-mean demographic variables are not included for a few reasons. The number of observations in the data is small, so I wanted to be careful with adding too many variables into the model. After including these variables in the model, the Akaike information criterion (AIC), a common measure of relative model fit, went up slightly (indicating a worse model fit) and the residual diagnostics (discussed in the [Appendix](#model-diagnostics)) indicated a worse fit as well. Since these variables were primarily included as controls, I felt comfortable leaving them out for now. 
+County-mean demographic variables are not included for a few reasons. The number of observations in the data is small, and I was having difficulty getting a model to converge on a stable set of estimates, so I wanted to be careful with adding too many variables into the model. After including these variables in the model, the Akaike information criterion (AIC), a common measure of predictive model fit, went up slightly (indicating a worse model fit) and the residual diagnostics (discussed in the [Appendix](#model-diagnostics)) indicated a worse fit as well. 
 
 I use a Poisson distribution (a commonly used distribution to model count data) with a log link and the <code>lme4::glmer</code> function from the <a href="https://cran.r-project.org/web/packages/lme4/index.html" target="_blank">lme4 package</a> to estimate the model. In addition to the variables discussed before, indicator variables for each year of data are included to account for any potential differences in the data gathering process from year to year. 
 
 ## Model Results
 
-Below are the resulting estimates for the coefficients of the model. I translated the coefficients to be percent changes in the number of prescription opioid related hospitalizations per 10,000 residents of a county. The variables have also been translated to units that I thought would be more interpretable and add context. A statistically significant term can be interpreted as changing the number of prescription opioid related hospitalizations per 10,000 by x%, controlling for the other variables. For "within effects", this change is for a county in a year, while for "between effects", this change is in the average number of hospitalizations for a county. Bold variables are statistically significant at the 0.05 level.[^5] In parentheses, are the percent change estimates 2 standard errors below and above the point estimate.
+I translated the coefficients of the resulting model to be percent changes in the number of prescription opioid related hospitalizations per 10,000 residents of a county. A coefficient can be interpreted as changing the number of prescription opioid related hospitalizations per 10,000 by x%, controlling for the other variables. For "within effects", this change is for a county in a year, while for "between effects", this change is in the average number of hospitalizations for a county. In parentheses are the percent change estimates 2 standard errors below and above the point estimate.
 
 <div style="margin-bottom:20px;"></div>
 
@@ -288,29 +285,18 @@ read_arcos_data("poisson-pctchange-table.rds")
 
 <div style="margin-bottom:20px;"></div>
 
-The main takeaway from the estimates is that there is indeed an association between the supply of opioid pills to a county and its prescription opioid hospitalization rate. More specifically, <strong>after controlling for the demographic and economic descriptors of a county, its prescription rate, and the percent of its residents receiving blind and/or disability SSI benefits, a county in New Jersey with a 5 pills per capita higher average number of prescription opioids supplied can be expected to have `r mdl_df %>% filter(term == "mean_lag_opioids") %>% pull(pctg) %>% round(2)`% more prescription opioid related hospitalizations per 10,000 residents</strong>. 
+The main takeaway from the estimates is that there is indeed an association between the supply of opioid pills to a county and its prescription opioid hospitalization rate. More specifically, <strong>after controlling for the demographic and economic descriptors of a county and its prescription rate, a county in New Jersey with a 5 pills per capita higher average number of prescription opioids supplied can be expected to have `r mdl_df %>% filter(term == "mean_lag_opioids") %>% pull(pctg) %>% round(2)`% more prescription opioid related hospitalizations per 10,000 residents</strong>. 
 
 ```{r model-effect-plot}
 display_arcos_plot("model-plot.rds", static = TRUE)
 ```
 
-The model also found that an increase in the average median household income for a county is associated with lower average prescription opioid related hospitalizations for that county, controlling for other variables. An increase of 0.1% of a county's residents  receiving SSI Blind and/or Disability benefits is associated with more opioid pill related hospitalizations in that year, controlling for other variables. Additionally, the year 2015 is statistically significant and associated with a higher prescription opioid hospitalization rate. This most likely reflects the change in coding of hospitalization visits in the fourth quarter of 2015, an update of the International Classification of Diseases, Clinical Modification (ICD-CM) to the 10th revision. Prescription rate in the previous year is on the border of statistical significance and it is possible with more data (and therefore more statistical power), its estimate would be significant (of course, the opposite could also be true).
 
-These results are in line with my intuition for the expected relationships between these variables and hospitlizations. However, an unintuitive result shows up with unemployment rate. A higher average unemployment rate for a county is associated with a lower number of prescription opioid related hospitalizations. Although, this relationship might be an indicator of a modeling or data deficiency, it does makes some sense when looking more closely at the interpretation. When interpreting the percent change effect of a variable, the other variables are held constant. After looking at the unemployment rate and hospitalization relationship grouped by binned number of opioids supplied per capita (with the number of pills now seen as being "held constant" within a bin), negative relationships can arise. The 40 group especially has a strong negative relationship. 
-
-<div style="margin-bottom:20px;"></div>
-
-```{r unemp-example}
-display_arcos_plot("unemp-hosp-example.rds", static = TRUE)
-```
-
-So although it is unintuitive initially, the negative effect is actually not completely out of left-field, and since the goal of this analysis is to parse out the effect of the opioid pill supply for a county and not specific aspects of its economy, I will leave this the details of this relationship to future work. 
-
-For further examination of the legitamacy of this model and its results, check out the [Model Diagnostics section](#model-diagnostics) of the Appendix.
+For further examination of the legitemacy of this model and its results, check out the [Model Diagnostics section](#model-diagnostics) of the Appendix.
 
 ## Final Thoughts
 
-Did I create a model that controls for all the institutional effects happening within a county that could impact its number of prescription opioid hospitalizations? Definitely not! Are there issues with the data I use in this analysis. Sure! ACS 1 year estimates can be imprecise, one can imagine all sorts of difficulties with accurately classifying a hospitalization as related to prescription opioid abuse, and for a complex model there are only 168 observations. However, given the available data, I think there is still enough evidence to say that the number of opioids being supplied to counties in New Jersey is strongly related to an increased number of prescription opioid related hospitalizations. Even outside of the modeling work done, the raw numbers of opioid pills being supplied to these counties is concerning. 
+Did I create a model that controls for all the institutional effects happening within a county and between counties that could impact its number of prescription opioid hospitalizations? Definitely not! Are there issues with the data I use in this analysis. Sure! ACS 1 year estimates can be imprecise, one can imagine all sorts of difficulties with accurately classifying a hospitalization as related to prescription opioid abuse, and for a complex model there are only 168 observations. This is a first stab at this question, and there will be future work to improve upon this. However, given the available data, I think there is still enough evidence to say that the number of opioids being supplied to counties in New Jersey is strongly related to an increased number of prescription opioid related hospitalizations. Even outside of the model, the raw numbers of opioid pills being supplied to these counties is concerning. 
 
 Further analysis and more data is needed to exactly quantify the effect of the opioid pill supply on New Jersey counties, and programs like <a href="https://www.cdc.gov/drugoverdose/foa/state-opioid-mm.html?CDC_AA_refVal=https%3A%2F%2Fwww.cdc.gov%2Fdrugoverdose%2Fdata%2Fnonfatal%2Fcdc-esoos.html" target="_blank">CDC's Enhanced State Opioid Overdose Surveillance (ESOOS)</a>, of which New Jersey is a part of, could be a potentially rich source of information for these future analyses and models. 
 
@@ -322,9 +308,9 @@ Ideally, this analysis could be extended to all counties in the United States. P
 
 ### Choosing a model
 
-Every observation in our data is a year in a county, repeated measures that create a nested hiearchy. Hierarchies in data violate a standard assumption of linear regression - after controlling for all included variables in a study, the residuals from each observation are independent. The yearly number of hospital visits within each county will be correlated, and therefore the residuals from a linear regression are also likely to be correlated. We are forced to use some other method besides linear regression or its extensions like the general linear model. 
+Every observation in the data is a year in a county, repeated measures that create a nested hierarchy. Hierarchies in data violate a standard assumption of linear regression - after controlling for all included variables in a study, the residuals from each observation are independent. The yearly number of hospital visits within each county will be correlated, and therefore the residuals from a linear regression are also likely to be correlated. We are forced to use some other method besides linear regression or its extensions like the general linear model. 
 
-From my research, I found three general approaches to hierarchecal data analysis:
+From my research, I found three general approaches to hierarchical data analysis:
 
 * Generalized Estimating Equations (GEE)
 * Fixed-Effects Modeling
@@ -376,7 +362,7 @@ For a significantly more in-depth but still accessible account of these two mode
 ### Model Diagnostics
 To ensure the legitimacy of the results from this model, we need to check some of its assumptions. Modeling hospitalization counts with a poisson distribution adds an assumption of equidispersion, that the mean and variance of the residuals from our model are the same. More often than not, models suffer from overdispersion. The overdispersion test from the <a href="https://easystats.github.io/performance/reference/check_overdispersion.html" target="_blank">performance</a> package was used to check if the residuals of the model exhibit overdispersion, and the test failed to reject the null hypothesis of equidispersion.
 
-In ordinary linear regression, many checks of assumptions are done by looking at the residuals. However, with a count outcome, the data is often grouped around a few numbers. With the hierarchical structure of our data, this strong grouping only intensifies. This makes it difficult to check classic pearson or deviance residuals and make informed conclusions. However, the R package <a href="https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html" target="_blank">DHARMa</a> provides a method to check randomized quantile residuals. Randomized quantile residuals are a simulation based approach to checking model validity. Creating these residuals is done by first estimating an empirical cumulative density function (CDF) from the predicted values of the model. Then the actual observational outcome data is checked against the CDF, and the quantile it falls in is recorded. For example, a recorded quantile of 0.75 means that 75% of the predicted data falls below that observation. The "randomized" part of this process is the transformation of an integer outcome into a smooth CDF, which requires adding a random value to the predictions. This is usually chosen from a random uniform distribution. Intuitively, one would think that if the model is guessing wrong in a non-systematic way then the spread of the observations along the quantiles will be pretty even. Indeed, <a href="https://math.usask.ca/~longhai/researchteam/theses/alithesis.pdf" target="_blank">Sadeghpour (2016)</a> showed that if the model accurately reflects the data generating process of the observations, then the randomized quantile residuals will follow a normal distribution. 
+In ordinary linear regression, many checks of assumptions are done by looking at the residuals. However, with a count outcome, the data is often grouped around a few numbers. With the hierarchical structure of our data, this strong grouping only intensifies. This makes it difficult to check classic pearson or deviance residuals and make informed conclusions about patterns in residual plots. However, the R package <a href="https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html" target="_blank">DHARMa</a> provides a method to check randomized quantile residuals. Randomized quantile residuals are a simulation based approach to checking model validity. Creating these residuals is done by first estimating an empirical cumulative density function (CDF) from the predicted values of the model. Then the actual observational outcome data is checked against the CDF, and the quantile it falls in is recorded. For example, a recorded quantile of 0.75 means that 75% of the predicted data falls below that observation. The "randomized" part of this process is the transformation of an integer outcome into a smooth CDF, which requires adding a random value to the predictions. This is usually chosen from a random uniform distribution. Intuitively, one would think that if the model is guessing wrong in a non-systematic way then the spread of the observations along the quantiles will be pretty even. Indeed, <a href="https://math.usask.ca/~longhai/researchteam/theses/alithesis.pdf" target="_blank">Sadeghpour (2016)</a> showed that if the model accurately reflects the data generating process of the observations, then the randomized quantile residuals will follow a normal distribution. 
 
 
 <div style="margin-bottom:20px;"></div>
@@ -395,12 +381,9 @@ plotResiduals(resids,
               xlab = "Scaled by 100 and Mean Centered: Opioid Pills Supplied per capita in Previous Year")
 ```
 
-The main variable of interest, opioid pills supplied, does not show any statistically significant quantile deviations (the same is true of the other independent variables). However, there is a quadratic looking pattern. This may indicate that the relationship between opioid supply and hospitalizations could be modeled with a quadratic transformation, or that there is some missing variable(s) accounting for the relationship. I could not get a successful model fit after adding a quadratic opioid supply term, and given the low count of observations, I leave that to future work. If this analysis can be extended to the entire United States, the increased number of observations would allow for more complex relationships to be included in the model. 
-
-As a robustness check of the results of this model, I ran Generalized Estimating Equations (GEE) regression, which has  fewer assumptions but more restrictive interpretations for the hypothesis of interest. The same exact data and variables were included and results were not drastically different. The average opioids per capita of a county had a p-value just outside of the statistically significant range at 0.05, but this is not enough to raise alarm bells, given how sensitive I found the GEE to specification. Interestingly, prescription rate in the previous year is statistically significant in the GEE (it was just on the border of the random intercept model). The other variables that were statistically significant remain the same, with identical directions for their effects. I am much more worried about possible misspecification of the model in terms of omitted variables, than the distributional assumptions that a GEE gets around, but its results do not take away from the evidence put forth by the random intercept model.
+The main variable of interest, lagged opioid pills supplied, does not show any statistically significant quantile deviation. However, there is a quadratic looking pattern. This may indicate that the relationship between opioid supply and hospitalizations could be modeled with a quadratic transformation, or that there is some missing variable(s) accounting for the relationship. I could not get a successful model fit after adding a quadratic opioid supply term, and given the low count of observations, I leave that to future work. If this analysis can be extended to the entire United States, the increased number of observations would allow for more complex relationships to be included in the model. 
 
 [^1]: The underlying data from the dashboard actually comes from the <a href="https://www.nj.gov/health/healthcarequality/health-care-professionals/njddcs/" target="_blank">NJ Hospital Discharge Data Collection System (NJDDCS)</a>. The NJDDCS collects its data from electronically submitted claims for health care provided in a hospital or electronic submitted exchanges of claims information between payers. Payers in this case being either the individual, business, or insurance company paying for a healthcare service.
 [^2]: The actual data supporting these maps and tables comes from the IQVIA Xponent 2006–2018 data, a sample of approximately 49,900 retail (non-hospital) pharmacies, which dispense nearly 92% of all retail prescriptions in the United States. From the CDC Website, a prescription in this data is defined as "an initial or refill prescription dispensed at a retail pharmacy in the sample and paid for by commercial insurance, Medicaid, Medicare, cash or its equivalent. This database does not include mail order prescriptions." Unfortunately, there is no guarantee that the person obtaining a prescription lives in that county, which adds uncertainty to the rate numbers provided by this data. 
 [^3]: A more thorough discussion of choosing ACS estimates can be found in Appendix 1 of <a href="https://www.psc.isr.umich.edu/dis/acs/handouts/Compass_Appendix.pdf" target="_blank">University of Michigan's ACS guidelines</a>.
 [^4]: The terms fixed effects and random effects have different <a href="https://stats.stackexchange.com/a/4702" target="_blank">meanings and interpretations</a> depending on who is using them. 
-[^5]: The prescription rate in the previous year is not quite statistically significant at the 0.05 level, but is close enough that I wanted it to also stand out.
