@@ -11,7 +11,7 @@ tags:
   - shiny
   - R
   - music
-summary: I made an <a href="https://svitkin.shinyapps.io/musicbrainz-collaborationz/" target="_blank">application</a> that lets you discover music collaborations through the MusicBrainz database.
+summary: An <a href="https://svitkin.shinyapps.io/musicbrainz-collaborationz/" target="_blank">application</a> that lets you discover music collaborations through the MusicBrainz database.
 ---
 
 One of my favorite ways to discover music is through those weird split EPs and collaborations that on the surface make no sense. Artists on the same album from different genres or splits that have one artist I am familiar with and one I'm not. Projects like this <a href="https://seagreenrecords.bandcamp.com/album/porches-mdou-moctar-split" target="_blank">split</a> between New York based synth-pop project Porches and Tuareg guitar virtuoso Mdou Moctar. Beautiful crooning and abstract electronic layers on one side, and joyous clapping and intricate, moving guitar melodies on the other. It's a glimpse into the collaborative network of artists and labels that create my favorite music. 

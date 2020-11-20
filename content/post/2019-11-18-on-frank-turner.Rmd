@@ -10,12 +10,12 @@ tags:
   - music
   - leaflet
   - map
-summary: Frank Turner is one of my favorite artists and performers. He is also one of the hardest working touring musicians out there, having played at well over 2,000 shows since 2004. I made a map showing all the stops along the way.
+summary: A map of all the shows Frank Turner has played so far.
 ---
 
 ## The Map
 
-Frank Turner is one of my favorite artists and performers. His albums have been a big part of my life and his live shows are memorable experiences I'd recommend to anyone. He is also one of the hardest working touring musicians out there, having played at well over 2,000 shows since 2004. The respect he has for his craft is inspiring.
+Frank Turner is one of my favorite artists and performers, and his live shows are memorable experiences I'd recommend to anyone. He is also one of the hardest working touring musicians out there, having played at well over 2,000 shows since 2004. The respect he has for his craft is inspiring.
 
 His fans are also inspiring! Going off of the idea and work the user Zoe_Bee on <a href="https://forum.frank-turner.com" target='_blank'>forum.frank-turner.com</a> had done[^1], and using the data on his website and the mapping package leaflet, I decided to visualize all of his shows so far[^2]. So go explore! The map is completely interactive. Find the shows you were at or just marvel at the Road[^3] this man has taken throughout his career.
 
