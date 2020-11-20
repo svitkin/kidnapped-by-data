@@ -20,6 +20,6 @@ With that in mind, I made a <a href="https://svitkin.shinyapps.io/musicbrainz-co
 
 <img src="/post/musicbrainz-post/musicbrainz.gif" alt="Using the MusicBrainz Collaborationz app" style="display:block; margin-left:auto; margin-right: auto;">
 
-I primarily based my code off of <a href="https://github.com/mikkelkrogsholm/musicbrainz" target="_blank">another repository</a> for connecting to the MusicBrainz web service. In the future, <a href="https://github.com/dmi3kno/musicbrainz" target="_blank">this tidy API wrapper</a> for the MusicBrainz looks really promising.
+I primarily based my code off of <a href="https://github.com/mikkelkrogsholm/musicbrainz" target="_blank">another repository</a> for connecting to the MusicBrainz web service. In the future, <a href="https://github.com/dmi3kno/musicbrainz" target="_blank">this tidy API wrapper</a> looks really promising.
 
 All code for this project can be found <a href="https://github.com/svitkin/musicbrainz-collaborationz" target="_blank">here</a>.
