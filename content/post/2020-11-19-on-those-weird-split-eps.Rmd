@@ -8,15 +8,18 @@ tags:
   - musicbrainz
   - api
   - collaborations
+  - shiny
+  - R
+  - music
 summary: I made an <a href="https://svitkin.shinyapps.io/musicbrainz-collaborationz/" target="_blank">application</a> that lets you discover music collaborations through the MusicBrainz database.
 ---
 
-One of my favorite ways to discover music is through those weird split EPs and collaborations that on the surface make no sense. Artists on the same album from different genres or splits that have one artist I am familiar with and one I'm not. EPs like this amazing <a href="https://seagreenrecords.bandcamp.com/album/porches-mdou-moctar-split" target="_blank">split</a> between New York based synth-pop project Porches and Tuareg guitar legend Mdou Moctar. They give a glimpse into the collaborative network of artists and labels that create the music I love. 
+One of my favorite ways to discover music is through those weird split EPs and collaborations that on the surface make no sense. Artists on the same album from different genres or splits that have one artist I am familiar with and one I'm not. EPs like this <a href="https://seagreenrecords.bandcamp.com/album/porches-mdou-moctar-split" target="_blank">split</a> between New York based synth-pop project Porches and Tuareg guitar legend Mdou Moctar. They give a glimpse into the collaborative network of artists and labels that create my favorite music. 
 
-With that in mind, I made a <a href="https://svitkin.shinyapps.io/musicbrainz-collaborationz/" target="_blank">simple Shiny app</a> that lets you find musical collaborations (and some of those hidden gem splits) through the amazing <a href="https://musicbrainz.org/" target="_blank">MusicBrainz</a> database. MusicBrainz is an online and free encyclopedia of music data, maintained entirely by its open community. It also has a web service, so you can access data from it programmatically. Creating the app, I used the <code>httr</code> package for connecting to the web service, the <code>ratelimitr</code> package for maintaining rate-limited requests for data, and some of the usual <code>tidyverse</code> packages for cleaning and organizing data. In the app, you can also open a search for the project you want to listen to, or click on a collaborator in your current search and jump down a new rabbit hole. 
+With that in mind, I made a <a href="https://svitkin.shinyapps.io/musicbrainz-collaborationz/" target="_blank">Shiny app</a> that lets you find musical collaborations (and some of those hidden gem splits) through the great <a href="https://musicbrainz.org/" target="_blank">MusicBrainz</a> database. MusicBrainz is an online and free encyclopedia of music data, maintained entirely by its open community. It also has a web service, so you can access data from it programmatically. To create the app, I primarily used the <code>httr</code> package for connecting to the web service, the <code>ratelimitr</code> package for maintaining rate-limited requests for data, and some of the usual <code>tidyverse</code> packages for cleaning and organizing data. In the app, you can also open a search for the project you want to listen to, or click on a collaborator in your current search and jump down a new rabbit hole. 
 
 <img src="/post/musicbrainz-post/musicbrainz.gif" alt="Using the MusicBrainz Collaborationz app" style="display:block; margin-left:auto; margin-right: auto;">
 
-I primarily wrote my own code or based code off of <a href="https://github.com/mikkelkrogsholm/musicbrainz" target="_blank">another repository</a> for connecting to the MusicBrainz web service. In the future, <a href="https://github.com/dmi3kno/musicbrainz" target="_blank">this tidy API wrapper</a> for the MusicBrainz looks really promising.
+I primarily based my code off of <a href="https://github.com/mikkelkrogsholm/musicbrainz" target="_blank">another repository</a> for connecting to the MusicBrainz web service. In the future, <a href="https://github.com/dmi3kno/musicbrainz" target="_blank">this tidy API wrapper</a> for the MusicBrainz looks really promising.
 
 All code for this project can be found <a href="https://github.com/svitkin/musicbrainz-collaborationz" target="_blank">here</a>.
