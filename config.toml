@@ -32,8 +32,8 @@ canonifyurls = true
 
 [author]
   name = "Sol Vitkin"
-  bio = "Data scientist currently cutting his teeth as a software engineer. This is where I post about the projects I work on! You can reach me at <a href='mailto:svitkin32@gmail.com'>svitkin32@gmail.com</a>."
-  job = "Data Scientist"
+  bio = "Software engineer at System. This is where I post about the projects I work on! You can reach me at <a href='mailto:svitkin32@gmail.com'>svitkin32@gmail.com</a>."
+  job = "Software Engineer"
   location = "Brooklyn, NY"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
   # gravatarEmail = "svitkin32@gmail.com"
