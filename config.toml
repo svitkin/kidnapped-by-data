@@ -32,7 +32,7 @@ canonifyurls = true
 
 [author]
   name = "Sol Vitkin"
-  bio = "Software engineer at System. This is where I post about the projects I work on! You can reach me at <a href='mailto:svitkin32@gmail.com'>svitkin32@gmail.com</a>."
+  bio = "Software engineer and former data scientist. This is where I post about the projects I work on! You can reach me at <a href='mailto:svitkin32@gmail.com'>svitkin32@gmail.com</a>."
   job = "Software Engineer"
   location = "Brooklyn, NY"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
@@ -81,7 +81,13 @@ canonifyurls = true
   identifier = "linkedin"
   name = "LinkedIn"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-linkedin\"></i>"
-  url = "https://www.linkedin.com/in/sol-vitkin-351237114/"
+  url = "https://www.linkedin.com/in/sol-vitkin-351237114/"  
+[[menu.links]]
+  weight = 3
+  identifier = "rbloggers"
+  name = "R-Bloggers"
+  pre = ""
+  url = "https://www.r-bloggers.com"
 
 [[menu.misc]]
   weight = 1
@@ -89,6 +95,7 @@ canonifyurls = true
   name = "RSS"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-rss\"></i>"
   url = "/index.xml"
+
 
 [params]
   # Customize date format use to render blog post date, categories and other
