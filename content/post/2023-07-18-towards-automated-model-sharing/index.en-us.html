@@ -1,0 +1,64 @@
+---
+title: 'On automated model home pages'
+author: ''
+date: '2023-07-18'
+slug: on-automated-model-homepages
+categories: []
+tags:
+  - models
+  - broom
+  - gt
+summary: An <a href="https://github.com/svitkin/readme-example" target="_blank">automated method</a> for documenting models with a README.
+---
+
+
+
+<p>I haven’t written a post in a while! Life, etc. but I’m excited to write about something I’ve thought about on and off again for a bit. If you want to skip the reading and go straight to some code, check out how to automatically document your models in a GitHub repository <a href="https://github.com/svitkin/readme-example">here</a>.</p>
+<p>This post assumes some familiarity with version control and GitHub.</p>
+<div id="why-a-homepage" class="section level1">
+<h1>Why a homepage</h1>
+<p>R and its ecosystem of packages and tooling has made it much easier to statistically model and <a href="https://quarto.org/">communicate results</a>. However, one thing that I’ve thought would be useful is a homepage for models. Something that lives close to the code and could automatically help catalog results and diagnostics for a person or a team. I’ve been inspired by the way <a href="https://huggingface.co/">Hugging Face</a> in particular has been able to host all the information about their uploaded models (mainly for predictive tasks) in a transparent and helpful way for their users.</p>
+<p>These homepages wouldn’t be a way to replace more involved and customized document generation with R markdown, which I think is wonderful, but more as a way to have a transparent and unified interface for cataloging model results.</p>
+</div>
+<div id="leveraging-github-readmes" class="section level1">
+<h1>Leveraging GitHub READMEs</h1>
+<p>So what if we use something that already exists to automate sharing model metadata? Assuming you use <a href="https://github.com">GitHub</a> and your modeling work is version controlled, GitHub already creates “homepages” for your repository using a README.md file. One assumption (maybe not a fair one) you can make to move the needle, is that every repository is a single unit of modeling work. If that’s the case, we can treat a repo’s README as a homepage for the model(s), and voila, you have a location for your model homepage.</p>
+<div id="create-your-own-documented-models" class="section level2">
+<h2>Create your own documented models</h2>
+<p>Now that we have assumed that our model homepage can be in a README, we still need a way to put information in that file in a simple, unobtrusive way. I created a <a href="https://github.com/svitkin/readme-example">repository</a> to do just that!</p>
+<p>Use the <a href="https://github.com/svitkin/readme-example">repo</a> as a template:</p>
+<p><img src="/post/model-homepage-post/template.png" alt="Adding a template" style="display:block; margin-left:auto; margin-right: auto;"></p>
+<p>Change the code in <code>R/model.R</code> to run your own models, and automatically have the repository README update on your pushed changes.</p>
+<p><img src="/post/model-homepage-post/example-readme.gif" alt="Example README" style="display:block; margin-left:auto; margin-right: auto;"></p>
+<div id="how-it-works" class="section level3">
+<h3>How it works</h3>
+<p>Normally, you create a model with a line of code like <code>lm(Ozone ~ Wind + Solar.R + Temp, data = airquality)</code>. If you are using the template, you can simply annotate that line with a comment above,</p>
+<pre><code>#~ AQ Model
+lm(Ozone ~ Wind + Solar.R + Temp, data = airquality)</code></pre>
+<p>source <code>model_readme/process_file.R</code> and have it add a coefficient table, some overall model summary diagnostics like R^2, and a residuals plot to the README.md.</p>
+<p>The <code>#~</code> indicates to the repository’s code to extract metadata from the model below and the <code>AQ Model</code> is the header that will be added to the README.</p>
+<p>All of this is done with the help of the <code>broom</code> package (for working with models in a unified format) and the <code>gt</code>, <code>gtsummary</code>, and <code>ggplot2</code> packages for displaying data. They are invaluable to making that simple comment create something like:</p>
+<p><img src="/post/model-homepage-post/model.gif" alt="Single Model README" style="display:block; margin-left:auto; margin-right: auto;"></p>
+<p>It’s nice to be able to automate this kind of documentation for one model, but a lot of interesting works comes from the comparison of different models studying the same outcome. This template can automate documentation for that as well!</p>
+<pre><code>#~ MPG Model with mtcars {Using AM}
+m &lt;- lm(mpg ~ cyl + am + hp, data = mtcars)
+
+#~ MPG Model with mtcars {Without AM}
+m2 &lt;- lm(mpg ~ cyl + hp,
+         data = mtcars)</code></pre>
+<p>If you annotate multiple models with the same header (like here <code>MPG Model with mtcars</code>) and then use <code>{}</code> notation to specifically name the model, the code will automatically combine the models in the README.</p>
+<p><img src="/post/model-homepage-post/multiple-models.gif" alt="Mutliple Models Compared in README" style="display:block; margin-left:auto; margin-right: auto;"></p>
+<p>This is all certainly an opinionated set of metadata to display. However, if you have other ideas for customization or want to document your models differently, you can always fork the repo that generates all this documentation and mess around with the functions in <a href="https://github.com/svitkin/readme-example/blob/main/model_readme/model_mkdown_outputs.R"><code>model_readme/model_mkdown_outputs.R</code></a> to get your desired output. And feel free to reach out for any help.</p>
+</div>
+</div>
+<div id="automating-updates" class="section level2">
+<h2>Automating updates</h2>
+<p>Great so we have a method for creating model homepages. But it is tedious to have to source a file every time you change something. To fully leverage the automated nature of version control, a <a href="https://github.com/features/actions">GitHub Actions</a> <a href="https://github.com/svitkin/readme-example/blob/main/.github/workflows/main.yml">workflow</a> was added to fully automate changing the README whenever a commit is pushed to the repository, allowing you to sit back and focus on modeling and let everything else be automated as you make changes.</p>
+<p>Make sure you change the repository secret <code>GH_TOKEN</code> to your <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">personal access token</a> if you want to be able to push changes like this automatically.</p>
+</div>
+</div>
+<div id="future" class="section level1">
+<h1>Future</h1>
+<p>A lot of this functionality can be wrapped up into an R package. If you think that would be useful, let me know through email or as an issue in the repository where this code is hosted! Hope this is helpful for anyone trying to share their work in an automated way.</p>
+<p>Thank you to <a href="https://drdoane.com/">Dr. Wil Doane</a> for your help as always.</p>
+</div>
