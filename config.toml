@@ -82,12 +82,7 @@ canonifyurls = true
   name = "LinkedIn"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-linkedin\"></i>"
   url = "https://www.linkedin.com/in/sol-vitkin-351237114/"  
-[[menu.links]]
-  weight = 3
-  identifier = "rbloggers"
-  name = "R-Bloggers"
-  pre = ""
-  url = "https://www.r-bloggers.com"
+
 
 [[menu.misc]]
   weight = 1
@@ -95,6 +90,12 @@ canonifyurls = true
   name = "RSS"
   pre = "<i class=\"sidebar-button-icon fa fa-lg fa-rss\"></i>"
   url = "/index.xml"
+[[menu.misc]]
+  weight = 2
+  identifier = "rbloggers"
+  name = "R-Bloggers"
+  pre = ""
+  url = "https://www.r-bloggers.com"
 
 
 [params]
