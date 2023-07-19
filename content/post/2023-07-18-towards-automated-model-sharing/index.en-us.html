@@ -22,18 +22,18 @@ summary: An <a href="https://github.com/svitkin/readme-example" target="_blank">
 </div>
 <div id="leveraging-github-readmes" class="section level1">
 <h1>Leveraging GitHub READMEs</h1>
-<p>Assuming you use <a href="https://github.com">GitHub</a> and your modeling work is version controlled, GitHub already creates “homepages” for your repository using a <code>README.md</code> file. We can enrich a repository README with model results and diagnostics, and have it always be the first thing someone sees when they find your repo.</p>
-<p>I created a <a href="https://github.com/svitkin/readme-example">template repository</a> to automatically do just that.</p>
+<p>Assuming you use <a href="https://github.com">GitHub</a> and your modeling work is version controlled, GitHub already creates “homepages” for your repository using a <code>README.md</code> file. We can enrich a repository <code>README</code> with model results and diagnostics, and have that always be the first thing someone sees when they find your repo.</p>
+<p>I created a <a href="https://github.com/svitkin/readme-example">template repository</a> to automatically do just that!</p>
 <p><img src="/post/model-homepage-post/template.png" alt="Adding a template" style="display:block; margin-left:auto; margin-right: auto;"></p>
-<p>If you change the code in <code>R/model.R</code> to run your own models, the template will automatically have the repository README update on your pushed changes with documentation for your model results.</p>
+<p>If you change the code in <code>R/model.R</code> to run your own models, the template will automatically have the repository <code>README</code> update on your pushed changes with documentation for your model results.</p>
 <p><img src="/post/model-homepage-post/example-readme.gif" alt="Example README" style="display:block; margin-left:auto; margin-right: auto;"></p>
 <div id="how-it-works" class="section level2">
 <h2>How it works</h2>
 <p>Normally, you create a model with a line of code like <code>lm(Ozone ~ Wind + Solar.R + Temp, data = airquality)</code>. If you are using the template, you can simply annotate that line with a comment above,</p>
 <pre><code>#~ AQ Model
 lm(Ozone ~ Wind + Solar.R + Temp, data = airquality)</code></pre>
-<p>source <code>model_readme/process_file.R</code> and have it add a coefficient table, some overall model summary diagnostics like R^2, and a residuals plot to the README.md.</p>
-<p>The <code>#~</code> indicates to the repository’s code to extract metadata from the model below and the <code>AQ Model</code> is the header that will be added to the README.</p>
+<p>source <code>model_readme/process_file.R</code> and have it add a coefficient table, some overall model summary diagnostics like R^2, and a residuals plot to the <code>README.md</code>.</p>
+<p>The <code>#~</code> indicates to the repository’s code to extract metadata from the model below and the <code>AQ Model</code> is the header that will be added to the <code>README</code>.</p>
 <p>All of this is done with the help of the <code>broom</code> package (for working with models in a unified format) and the <code>gt</code>, <code>gtsummary</code>, and <code>ggplot2</code> packages for displaying data. They are invaluable to making that simple comment create something like:</p>
 <p><img src="/post/model-homepage-post/model.gif" alt="Single Model README" style="display:block; margin-left:auto; margin-right: auto;"></p>
 <p>It’s nice to be able to automate this kind of documentation for one model, but a lot of interesting works comes from the comparison of different models studying the same outcome. This template can automate documentation for that as well!</p>
@@ -43,13 +43,13 @@ m &lt;- lm(mpg ~ cyl + am + hp, data = mtcars)
 #~ MPG Model with mtcars {Without AM}
 m2 &lt;- lm(mpg ~ cyl + hp,
          data = mtcars)</code></pre>
-<p>If you annotate multiple models with the same header (like here <code>MPG Model with mtcars</code>) and then use <code>{}</code> notation to specifically name the model, the code will automatically combine the models in the README.</p>
+<p>If you annotate multiple models with the same header (like here <code>MPG Model with mtcars</code>) and then use <code>{}</code> notation to specifically name the model, the code will automatically combine the models in the <code>README</code>.</p>
 <p><img src="/post/model-homepage-post/multiple-models.gif" alt="Mutliple Models Compared in README" style="display:block; margin-left:auto; margin-right: auto;"></p>
 <p>This is all certainly an opinionated set of metadata to display. However, if you have other ideas for customization or want to document your models differently, you can always fork the repo that generates all this documentation and mess around with the functions in <a href="https://github.com/svitkin/readme-example/blob/main/model_readme/model_mkdown_outputs.R"><code>model_readme/model_mkdown_outputs.R</code></a> to get your desired output. And feel free to reach out for any help.</p>
 </div>
 <div id="automating-updates" class="section level2">
 <h2>Automating updates</h2>
-<p>Great so we have a method for creating model homepages. But it is tedious to have to source a file every time you change something. To fully leverage the automated nature of version control, a <a href="https://github.com/features/actions">GitHub Actions</a> <a href="https://github.com/svitkin/readme-example/blob/main/.github/workflows/main.yml">workflow</a> was added to fully automate changing the README whenever a commit is pushed to the repository, allowing you to sit back and focus on modeling and let everything else be automated as you make changes.</p>
+<p>Great so we have a method for creating model homepages. But it is tedious to have to source a file every time you change something. To fully leverage the automated nature of version control, a <a href="https://github.com/features/actions">GitHub Actions</a> <a href="https://github.com/svitkin/readme-example/blob/main/.github/workflows/main.yml">workflow</a> was added to fully automate changing the <code>README</code> whenever a commit is pushed to the repository, allowing you to sit back and focus on modeling and let everything else be automated as you make changes.</p>
 <p>Make sure you change the repository secret <code>GH_TOKEN</code> to your <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">personal access token</a> if you want to be able to push changes like this automatically.</p>
 </div>
 </div>

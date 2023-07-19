@@ -24,13 +24,13 @@ These homepages wouldn't replace more involved and customized document generatio
 
 # Leveraging GitHub READMEs
 
-Assuming you use [GitHub](https://github.com) and your modeling work is version controlled, GitHub already creates "homepages" for your repository using a `README.md` file. We can enrich a repository README with model results and diagnostics, and have it always be the first thing someone sees when they find your repo.
+Assuming you use [GitHub](https://github.com) and your modeling work is version controlled, GitHub already creates "homepages" for your repository using a `README.md` file. We can enrich a repository `README` with model results and diagnostics, and have that always be the first thing someone sees when they find your repo.
 
-I created a [template repository](https://github.com/svitkin/readme-example) to automatically do just that.
+I created a [template repository](https://github.com/svitkin/readme-example) to automatically do just that!
 
 <img src="/post/model-homepage-post/template.png" alt="Adding a template" style="display:block; margin-left:auto; margin-right: auto;">
 
-If you change the code in `R/model.R` to run your own models, the template will automatically have the repository README update on your pushed changes with documentation for your model results.
+If you change the code in `R/model.R` to run your own models, the template will automatically have the repository `README` update on your pushed changes with documentation for your model results.
 
 <img src="/post/model-homepage-post/example-readme.gif" alt="Example README" style="display:block; margin-left:auto; margin-right: auto;">
 
@@ -43,9 +43,9 @@ Normally, you create a model with a line of code like `lm(Ozone ~ Wind + Solar.R
 lm(Ozone ~ Wind + Solar.R + Temp, data = airquality)
 ```
 
-source `model_readme/process_file.R` and have it add a coefficient table, some overall model summary diagnostics like R^2, and a residuals plot to the README.md. 
+source `model_readme/process_file.R` and have it add a coefficient table, some overall model summary diagnostics like R^2, and a residuals plot to the `README.md`. 
 
-The `#~` indicates to the repository's code to extract metadata from the model below and the `AQ Model` is the header that will be added to the README.
+The `#~` indicates to the repository's code to extract metadata from the model below and the `AQ Model` is the header that will be added to the `README`.
 
 All of this is done with the help of the `broom` package (for working with models in a unified format) and the `gt`, `gtsummary`, and `ggplot2` packages for displaying data. They are invaluable to making that simple comment create something like:
 
@@ -63,7 +63,7 @@ m2 <- lm(mpg ~ cyl + hp,
 ```
 
 
-If you annotate multiple models with the same header (like here `MPG Model with mtcars`) and then use `{}`  notation to specifically name the model, the code will automatically combine the models in the README.
+If you annotate multiple models with the same header (like here `MPG Model with mtcars`) and then use `{}`  notation to specifically name the model, the code will automatically combine the models in the `README`.
 
 <img src="/post/model-homepage-post/multiple-models.gif" alt="Mutliple Models Compared in README" style="display:block; margin-left:auto; margin-right: auto;">
 
@@ -71,7 +71,7 @@ This is all certainly an opinionated set of metadata to display. However, if you
 
 ## Automating updates
 
-Great so we have a method for creating model homepages. But it is tedious to have to source a file every time you change something. To fully leverage the automated nature of version control, a [GitHub Actions](https://github.com/features/actions) [workflow](https://github.com/svitkin/readme-example/blob/main/.github/workflows/main.yml) was added to fully automate changing the README whenever a commit is pushed to the repository, allowing you to sit back and focus on modeling and let everything else be automated as you make changes. 
+Great so we have a method for creating model homepages. But it is tedious to have to source a file every time you change something. To fully leverage the automated nature of version control, a [GitHub Actions](https://github.com/features/actions) [workflow](https://github.com/svitkin/readme-example/blob/main/.github/workflows/main.yml) was added to fully automate changing the `README` whenever a commit is pushed to the repository, allowing you to sit back and focus on modeling and let everything else be automated as you make changes. 
 
 Make sure you change the repository secret `GH_TOKEN` to your [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) if you want to be able to push changes like this automatically.
 
