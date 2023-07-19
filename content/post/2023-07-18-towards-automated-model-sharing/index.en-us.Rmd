@@ -83,4 +83,4 @@ Make sure you change the repository secret `GH_TOKEN` to your [personal access t
 
 A lot of this functionality can be wrapped up into an R package. If you think that would be useful, let me know through email or as an issue in the repository where this code is hosted! Hope this is helpful for anyone trying to share their work in an automated way.
 
-Thank you to [Dr. Wil Doane](https://drdoane.com/) for your help as always.
+Thank you to [Dr. William Doane](https://drdoane.com/) for your help as always.
