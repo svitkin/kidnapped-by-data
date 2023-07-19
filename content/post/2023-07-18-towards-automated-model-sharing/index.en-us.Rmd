@@ -24,21 +24,17 @@ These homepages wouldn't replace more involved and customized document generatio
 
 # Leveraging GitHub READMEs
 
-So what if we use something that already exists to automate sharing model metadata? Assuming you use [GitHub](https://github.com) and your modeling work is version controlled, GitHub already creates "homepages" for your repository using a README.md file. One assumption (maybe not a fair one) you can make to move the needle, is that every repository is a single unit of modeling work. If that's the case, we can treat a repo's README as a homepage for the model(s), and voila, you have a location for your model homepage.
+Assuming you use [GitHub](https://github.com) and your modeling work is version controlled, GitHub already creates "homepages" for your repository using a `README.md` file. We can enrich a repository README with model results and diagnostics, and have it always be the first thing someone sees when they find your repo.
 
-## Create your own documented models
-
-Now that we have assumed that our model homepage can be in a README, we still need a way to put information in that file in a simple, unobtrusive way. I created a [repository](https://github.com/svitkin/readme-example) to do just that! 
-
-Use the [repo](https://github.com/svitkin/readme-example) as a template:
+I created a [template repository](https://github.com/svitkin/readme-example) to automatically do just that.
 
 <img src="/post/model-homepage-post/template.png" alt="Adding a template" style="display:block; margin-left:auto; margin-right: auto;">
 
-Change the code in `R/model.R` to run your own models, and automatically have the repository README update on your pushed changes.
+If you change the code in `R/model.R` to run your own models, the template will automatically have the repository README update on your pushed changes with documentation for your model results.
 
 <img src="/post/model-homepage-post/example-readme.gif" alt="Example README" style="display:block; margin-left:auto; margin-right: auto;">
 
-### How it works
+## How it works
 
 Normally, you create a model with a line of code like `lm(Ozone ~ Wind + Solar.R + Temp, data = airquality)`. If you are using the template, you can simply annotate that line with a comment above,
 
