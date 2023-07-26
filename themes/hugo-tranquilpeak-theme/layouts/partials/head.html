@@ -26,6 +26,7 @@
   <head>
     {{ partial "head_start.html" . }}
     {{ partial "meta.html" . }}
+    <script defer data-domain="svitkin.rbind.io" src="https://plausible.io/js/script.js"></script>
     <title>{{ with .Title }}{{ . }}{{ else }}{{ .Site.Title }}{{ end }}</title>
 
     <link rel="icon" href="{{ with .Site.Params.favicon }}{{ . }}{{ else }}/favicon.png{{ end }}">
