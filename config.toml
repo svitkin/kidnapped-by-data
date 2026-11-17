@@ -15,7 +15,7 @@
 baseURL = "https://svitkin.rbind.io/"
 languageCode = "en-us"
 defaultContentLanguage = "en-us"
-title = "Kidnapped by Data"
+title = "Kidnapped by Data | Sol Vitkin"
 theme = "hugo-tranquilpeak-theme"
 # disqusShortname = "kidnapped-by-data"
 # googleAnalytics = "UA-123-45"
